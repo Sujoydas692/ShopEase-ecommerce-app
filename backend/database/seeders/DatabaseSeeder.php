@@ -1,0 +1,44 @@
+<?php
+
+namespace Database\Seeders;
+
+use App\Models\Brand;
+use App\Models\Category;
+use App\Models\Product;
+use App\Models\ProductDetails;
+use App\Models\ProductSlider;
+use App\Models\ProductVariation;
+use App\Models\User;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Seeder;
+
+class DatabaseSeeder extends Seeder
+{
+    use WithoutModelEvents;
+
+    /**
+     * Seed the application's database.
+     */
+    public function run(): void
+    {
+        // User::factory(10)->create();
+
+        // User::factory()->create([
+        //     'name' => 'Test User',
+        //     'email' => 'test@example.com',
+        // ]);
+
+        Brand::factory(10)->create();
+        Category::factory(10)->create();
+        Product::factory(100)->create();
+        ProductVariation::factory(100)->create();
+        ProductDetails::factory(100)->create();
+        ProductSlider::factory(30)->create();
+
+        $this->call([
+        DistrictSeeder::class,
+        UpazilaSeeder::class,
+        ShippingRuleSeeder::class
+    ]);
+    }
+}
