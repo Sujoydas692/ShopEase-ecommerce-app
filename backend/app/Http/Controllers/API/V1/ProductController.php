@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers\API\V1;
 
+use App\Helpers\ProductHelper;
 use App\Http\Controllers\Controller;
 use App\Models\Product;
 use App\Models\ProductSlider;
-use App\Helpers\ProductHelper;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
@@ -13,21 +13,22 @@ class ProductController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-         $products = Product::with('brand','category', 'sliders', 'details', 'variations')->productFilter($request)->paginate(20);
+        $products = Product::with('brand', 'category', 'sliders', 'details', 'variations')->productFilter($request)->paginate(20);
 
-         $products->getCollection()->transform(function ($product) {
-        return ProductHelper::format($product);
-    });
+        $products->getCollection()->transform(function ($product) {
+            return ProductHelper::format($product);
+        });
+
         return $this->success($products, 'Products retrieved successfully.');
     }
 
     public function featuredProducts(): JsonResponse
     {
-        $products = Product::with('brand','category', 'sliders', 'details')
+        $products = Product::with('brand', 'category', 'sliders', 'details')
             ->where('remarks', 'featured')
             ->get();
 
-        $products = $products->map(fn($p) => ProductHelper::format($p));
+        $products = $products->map(fn ($p) => ProductHelper::format($p));
 
         return $this->success($products, 'All featured products.');
     }
@@ -35,10 +36,10 @@ class ProductController extends Controller
     public function show(string $slug): JsonResponse
     {
         $product = Product::with([
-            'brand','category','sliders','details','variations'
+            'brand', 'category', 'sliders', 'details', 'variations',
         ])->where('slug', $slug)->first();
 
-        if (!$product) {
+        if (! $product) {
             return $this->error('Product not found.', 404);
         }
 
@@ -50,7 +51,7 @@ class ProductController extends Controller
     public function productSliders(): JsonResponse
     {
         $sliders = ProductSlider::with('product')->get();
+
         return $this->success($sliders, 'Product sliders retrieved successfully.');
     }
-
 }

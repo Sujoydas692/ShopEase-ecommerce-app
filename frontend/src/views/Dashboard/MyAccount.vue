@@ -69,7 +69,10 @@
                   >
                 </li>
                 <li class="nav-item">
-                  <a class="nav-link" href="javascript:void(0)" @click.prevent="logout"
+                  <a
+                    class="nav-link"
+                    href="javascript:void(0)"
+                    @click.prevent="logout"
                     ><i class="ti-lock"></i>Logout</a
                   >
                 </li>
@@ -92,23 +95,17 @@
                     <p>
                       From your account dashboard. you can easily check &amp;
                       view your
-                      <a
-                        href="javascript:void(0)"
-                        @click="switchTab('orders')"
+                      <a href="javascript:void(0)" @click="switchTab('orders')"
                         >recent orders</a
                       >, manage your
-                      <a
-                        href="javascript:void(0)"
-                        @click="switchTab('address')"
+                      <a href="javascript:void(0)" @click="switchTab('address')"
                         >shipping and billing addresses</a
                       >
                       and can
-                      <a
-                        href="javascript:void(0)"
-                        @click.prevent="logout"
+                      <a href="javascript:void(0)" @click.prevent="logout"
                         >logout</a
                       >
-                       from your account.
+                      from your account.
                     </p>
                   </div>
                 </div>
@@ -190,7 +187,9 @@
                           {{ customer.upazila }}, {{ customer.district }} <br />
                           {{ customer.postal_code }}
                         </address>
-                        <p v-else class="text-muted">No customer profile created.</p>
+                        <p v-else class="text-muted">
+                          No customer profile created.
+                        </p>
                       </div>
                     </div>
                   </div>
@@ -208,7 +207,9 @@
                           {{ shipping.upazila }}, {{ shipping.district }} <br />
                           {{ shipping.postal_code }}
                         </address>
-                        <p v-else class="text-muted">No customer profile created.</p>
+                        <p v-else class="text-muted">
+                          No customer profile created.
+                        </p>
                       </div>
                     </div>
                   </div>

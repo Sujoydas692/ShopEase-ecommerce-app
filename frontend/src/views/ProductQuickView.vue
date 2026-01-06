@@ -273,11 +273,11 @@ const displaySku = ref(props.product.sku ?? "N/A");
 const selectedVariation = computed(() => {
   if (!selectedSize.value || !selectedColor.value) return null;
 
-  return props.product.variations?.find(
-    (v) =>
-      v.size === selectedSize.value &&
-      v.color === selectedColor.value
-  ) || null;
+  return (
+    props.product.variations?.find(
+      (v) => v.size === selectedSize.value && v.color === selectedColor.value
+    ) || null
+  );
 });
 
 watch([selectedSize, selectedColor], () => {

@@ -78,8 +78,10 @@
                       >
                     </td>
                     <td class="product-add-to-cart">
-                      <a href="javascript:void(0)" class="btn btn-fill-out"
-                      @click.prevent="addToCartItem(item.product.id)"
+                      <a
+                        href="javascript:void(0)"
+                        class="btn btn-fill-out"
+                        @click.prevent="addToCartItem(item.product.id)"
                         ><i class="icon-basket-loaded"></i> Add to Cart</a
                       >
                     </td>

@@ -189,21 +189,21 @@
                     <tr v-for="item in cartStore.carts" :key="item.id">
                       <td>
                         <div>
-                        <div class="fw-semibold">
-                          {{ item.product.title }}
-                          <span class="product-qty">x {{ item.qty }}</span>
-                        </div>
+                          <div class="fw-semibold">
+                            {{ item.product.title }}
+                            <span class="product-qty">x {{ item.qty }}</span>
+                          </div>
 
-                        <div
-                          v-if="item.size || item.color"
-                          class="text-muted"
-                          style="font-size: 13px"
-                        >
-                          {{ item.size ?? "" }}
-                          <span v-if="item.size && item.color"> - </span>
-                          {{ item.color ?? "" }}
+                          <div
+                            v-if="item.size || item.color"
+                            class="text-muted"
+                            style="font-size: 13px"
+                          >
+                            {{ item.size ?? "" }}
+                            <span v-if="item.size && item.color"> - </span>
+                            {{ item.color ?? "" }}
+                          </div>
                         </div>
-                      </div>
                       </td>
                       <td>
                         ৳ {{ (item.product.price * item.qty).toFixed(2) }}

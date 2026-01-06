@@ -8,15 +8,13 @@ use App\Http\Requests\API\V1\RemoveCartRequest;
 use App\Http\Requests\API\V1\UpdateCartRequest;
 use App\Models\Cart;
 use App\Models\Product;
-use App\Models\ProductDetails;
-use GuzzleHttp\Handler\Proxy;
-use Illuminate\Http\Request;
 
 class ShoppingCartController extends Controller
 {
     public function index()
     {
         $carts = Cart::with('product')->where('user_id', auth()->id())->get();
+
         return $this->success($carts, 'Carts retrieved successfully.');
     }
 
@@ -25,23 +23,23 @@ class ShoppingCartController extends Controller
         $user = auth()->user();
         $product = Product::with('variations')->findOrFail($request->product_id);
 
-        $availableSizes  = $product->variations->pluck('size')->filter()->unique()->values();
+        $availableSizes = $product->variations->pluck('size')->filter()->unique()->values();
         $availableColors = $product->variations->pluck('color')->filter()->unique()->values();
 
         if ($availableSizes->isNotEmpty()) {
-            if (!$request->filled('size')) {
+            if (! $request->filled('size')) {
                 return $this->error('Size is required', 400);
             }
-            if (!$availableSizes->contains($request->size)) {
+            if (! $availableSizes->contains($request->size)) {
                 return $this->error('Size is not available.', 400);
             }
         }
 
         if ($availableColors->isNotEmpty()) {
-            if (!$request->filled('color')) {
+            if (! $request->filled('color')) {
                 return $this->error('Color is required', 400);
             }
-            if (!$availableColors->contains($request->color)) {
+            if (! $availableColors->contains($request->color)) {
                 return $this->error('Color is not available.', 400);
             }
         }
@@ -110,7 +108,7 @@ class ShoppingCartController extends Controller
     public function removeToCart(RemoveCartRequest $request)
     {
         $user = auth()->user();
-        if (!$cart = Cart::whereId($request->cart_id)->whereUserId($user->id)->first()) {
+        if (! $cart = Cart::whereId($request->cart_id)->whereUserId($user->id)->first()) {
             return $this->error('Product not in your cart.', 400);
         }
 
