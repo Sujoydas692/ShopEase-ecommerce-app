@@ -168,9 +168,13 @@
                       </div>
                       <div class="product_info">
                         <h6 class="product_title">
-                          <a href="shop-product-detail.html">{{
-                            product.title
-                          }}</a>
+                          <router-link
+                            :to="{
+                              name: 'productdetail',
+                              params: { slug: product.slug },
+                            }"
+                            >{{ product.title }}</router-link
+                          >
                         </h6>
                         <div class="product_price">
                           <span class="price">৳ {{ product.price }}</span>
@@ -277,9 +281,13 @@
                       </div>
                       <div class="product_info">
                         <h6 class="product_title">
-                          <a href="shop-product-detail.html">{{
-                            product.title
-                          }}</a>
+                          <router-link
+                            :to="{
+                              name: 'productdetail',
+                              params: { slug: product.slug },
+                            }"
+                            >{{ product.title }}</router-link
+                          >
                         </h6>
                         <div class="product_price">
                           <span class="price">৳ {{ product.price }}</span>
@@ -386,9 +394,13 @@
                       </div>
                       <div class="product_info">
                         <h6 class="product_title">
-                          <a href="shop-product-detail.html">{{
-                            product.title
-                          }}</a>
+                          <router-link
+                            :to="{
+                              name: 'productdetail',
+                              params: { slug: product.slug },
+                            }"
+                            >{{ product.title }}</router-link
+                          >
                         </h6>
                         <div class="product_price">
                           <span class="price">৳ {{ product.price }}</span>
@@ -495,9 +507,13 @@
                       </div>
                       <div class="product_info">
                         <h6 class="product_title">
-                          <a href="shop-product-detail.html">{{
-                            product.title
-                          }}</a>
+                          <router-link
+                            :to="{
+                              name: 'productdetail',
+                              params: { slug: product.slug },
+                            }"
+                            >{{ product.title }}</router-link
+                          >
                         </h6>
                         <div class="product_price">
                           <span class="price">৳ {{ product.price }}</span>
@@ -604,9 +620,13 @@
                       </div>
                       <div class="product_info">
                         <h6 class="product_title">
-                          <a href="shop-product-detail.html">{{
-                            product.title
-                          }}</a>
+                          <router-link
+                            :to="{
+                              name: 'productdetail',
+                              params: { slug: product.slug },
+                            }"
+                            >{{ product.title }}</router-link
+                          >
                         </h6>
                         <div class="product_price">
                           <span class="price">৳ {{ product.price }}</span>
@@ -761,7 +781,13 @@
                   </div>
                   <div class="product_info">
                     <h6 class="product_title">
-                      <a href="shop-product-detail.html">{{ product.title }}</a>
+                      <router-link
+                        :to="{
+                          name: 'productdetail',
+                          params: { slug: product.slug },
+                        }"
+                        >{{ product.title }}</router-link
+                      >
                     </h6>
                     <div class="product_price">
                       <span class="price">৳ {{ product.price }}</span>

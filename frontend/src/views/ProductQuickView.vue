@@ -10,8 +10,17 @@
       <div class="row">
         <div class="col-lg-6 col-md-6 mb-4 mb-md-0">
           <div class="product-image">
-            <div class="product_img_box">
-              <img id="product_img" :src="mainImage" :alt="product.title" />
+            <div
+              class="product_img_box zoom-container"
+              @mousemove="handleZoom"
+              @mouseleave="resetZoom"
+            >
+              <img
+                ref="zoomImg"
+                :src="mainImage"
+                :alt="product.title"
+                class="zoom-image"
+              />
             </div>
 
             <div class="thumbnail-gallery">
@@ -33,7 +42,13 @@
           <div class="pr_detail">
             <div class="product_description">
               <h4 class="product_title">
-                <a href="#">{{ product.title }}</a>
+                <router-link
+                  :to="{
+                    name: 'productdetail',
+                    params: { slug: product.slug },
+                  }"
+                  >{{ product.title }}</router-link
+                >
               </h4>
               <div class="product_price">
                 <span class="price">৳{{ product.price }}</span>
@@ -147,7 +162,15 @@
                   {{ addingToCart ? "Adding..." : "Add to cart" }}
                 </button>
                 <a class="add_compare" href="#"><i class="icon-shuffle"></i></a>
-                <a class="add_wishlist" href="#"><i class="icon-heart"></i></a>
+                <a
+                  class="add_wishlist"
+                  :class="{
+                    'active-wish': wishlist.includes(product.id),
+                  }"
+                  href="javascript:void(0)"
+                  @click.prevent="addToWish(product.id)"
+                  ><i class="icon-heart"></i
+                ></a>
               </div>
             </div>
             <hr />
@@ -198,6 +221,7 @@ import { useAuth } from "../store/auth";
 import { useCartStore } from "../store/cart";
 import { toast } from "vue3-toastify";
 import { useRouter } from "vue-router";
+import apiClient from "../lib/axiosClient";
 
 const props = defineProps({
   product: Object,
@@ -208,6 +232,7 @@ const emit = defineEmits(["close"]);
 const auth = useAuth();
 const cart = useCartStore();
 const router = useRouter();
+const wishlist = ref([]);
 
 const mainImage = ref("");
 
@@ -340,6 +365,71 @@ const addToCartItem = async (productId) => {
   addingToCart.value = false;
 };
 
+const loadWishlist = async () => {
+  if (!auth.isAuthenticated) {
+    return;
+  }
+  try {
+    const { data } = await apiClient.get("/wish-list");
+
+    wishlist.value = data.data.map((item) => item.product_id);
+  } catch (error) {
+    console.error("Failed to load wishlist", error);
+  }
+};
+
+const addToWish = async (productId) => {
+  if (!auth.isAuthenticated) {
+    toast.warning("You need to login first!");
+
+    setTimeout(() => {
+      router.push("/login");
+      return;
+    }, 2000);
+  } else {
+    try {
+      const { data } = await apiClient.post("add/wish-list", {
+        product_id: productId,
+      });
+
+      toast.success(
+        Array.isArray(data?.message) ? data.message[0] : data?.message
+      );
+
+      if (wishlist.value.includes(productId)) {
+        wishlist.value = wishlist.value.filter((id) => id !== productId);
+      } else {
+        wishlist.value.push(productId);
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to add to wishlist");
+    }
+  }
+};
+
+const zoomImg = ref(null);
+
+const handleZoom = (e) => {
+  const img = zoomImg.value;
+  if (!img) return;
+
+  const rect = img.getBoundingClientRect();
+
+  const x = ((e.clientX - rect.left) / rect.width) * 100;
+  const y = ((e.clientY - rect.top) / rect.height) * 100;
+
+  img.style.transformOrigin = `${x}% ${y}%`;
+  img.style.transform = "scale(2)";
+};
+
+const resetZoom = () => {
+  const img = zoomImg.value;
+  if (!img) return;
+
+  img.style.transformOrigin = "center center";
+  img.style.transform = "scale(1)";
+};
+
 const canOpen = quickViewManager.open();
 if (!canOpen) {
   handleClose();
@@ -357,6 +447,7 @@ const handleClose = () => {
 };
 
 onMounted(() => {
+  loadWishlist();
   document.addEventListener("keydown", handleKeyDown);
 
   if (allUniqueImages.value.length > 0) {
@@ -433,6 +524,21 @@ onUnmounted(() => {
   max-height: 400px;
   object-fit: contain;
   display: block;
+}
+
+.zoom-container {
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.zoom-image {
+  transition: transform 0.2s ease;
+  width: 100%;
+  height: auto;
+}
+
+.add_wishlist.active-wish i {
+  color: #ff324d !important;
 }
 
 .quickview-overlay {
@@ -533,6 +639,14 @@ onUnmounted(() => {
   .product_img_box {
     min-height: 250px;
     padding: 15px;
+  }
+
+  .zoom-container {
+    cursor: default;
+  }
+
+  .zoom-image {
+    transform: scale(1) !important;
   }
 
   .thumbnail-container {
