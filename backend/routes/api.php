@@ -22,7 +22,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('products', [ProductController::class, 'index']);
     Route::get('/product/{slug}', [ProductController::class, 'show']);
     Route::get('products/featured', [ProductController::class, 'featuredProducts']);
-    Route::get('product/sliders', [ProductController::class, 'productSliders']);
+    Route::get('products/sliders', [ProductController::class, 'productSliders']);
 
     Route::get('/districts', [LocationController::class, 'district']);
     Route::get('/upazilas/{district_id}', [LocationController::class, 'upazila']);
