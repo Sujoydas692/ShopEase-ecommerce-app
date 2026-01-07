@@ -28,79 +28,61 @@
     <!-- START SECTION SHOP -->
     <div class="section">
       <div class="container">
-        <div class="row">
-          <div class="col-12">
-            <div class="table-responsive wishlist_table">
-              <table class="table">
-                <thead>
-                  <tr>
-                    <th class="product-thumbnail">Image</th>
-                    <th class="product-name">Product</th>
-                    <th class="product-price">Price</th>
-                    <th class="product-stock-status">Stock Status</th>
-                    <th class="product-add-to-cart"></th>
-                    <th class="product-remove">Remove</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr
-                    v-for="item in wishlist"
-                    :key="item.id"
-                    v-if="wishlist.length > 0"
+        <div class="row shop_container">
+          <div
+            class="col-lg-3 col-md-4 col-6"
+            v-for="item in wishlist"
+            :key="item.id"
+            v-if="wishlist.length > 0"
+          >
+            <div class="product">
+              <div class="wishlist-img-wrapper">
+                <router-link
+                  :to="{
+                    name: 'productdetail',
+                    params: { slug: item.product.slug },
+                  }"
+                  ><img :src="item.product.image" alt="product1"
+                /></router-link>
+              </div>
+              <div class="product_info wishlist-info">
+                <div class="product-remove" data-title="Remove">
+                  <a
+                    href="javascript:void(0)"
+                    @click.prevent="removeWishList(item.product.id)"
+                    ><i class="ti-trash"></i
+                  ></a>
+                </div>
+                <h6 class="product_title">
+                  <router-link
+                    :to="{
+                      name: 'productdetail',
+                      params: { slug: item.product.slug },
+                    }"
+                    >{{ item.product.title }}</router-link
                   >
-                    <td class="product-thumbnail">
-                      <a href="#"
-                        ><img :src="item.product.image" alt="product1"
-                      /></a>
-                    </td>
-                    <td class="product-name" data-title="Product">
-                      <a href="#">{{ item.product.title }}</a>
-                    </td>
-                    <td class="product-price" data-title="Price">
-                      ৳ {{ item.product.price }}
-                    </td>
-                    <td
-                      class="product-stock-status"
-                      data-title="Stock Status"
-                      v-if="item.product.stock > 1"
-                    >
-                      <span class="badge rounded-pill text-bg-success"
-                        >In Stock</span
-                      >
-                    </td>
-                    <td
-                      class="product-stock-status"
-                      data-title="Stock Status"
-                      v-else
-                    >
-                      <span class="badge rounded-pill text-bg-danger"
-                        >Stock Out</span
-                      >
-                    </td>
-                    <td class="product-add-to-cart">
-                      <a
-                        href="javascript:void(0)"
-                        class="btn btn-fill-out"
-                        @click.prevent="addToCartItem(item.product.id)"
-                        ><i class="icon-basket-loaded"></i> Add to Cart</a
-                      >
-                    </td>
-                    <td class="product-remove" data-title="Remove">
-                      <a
-                        href="javascript:void(0)"
-                        @click.prevent="removeWishList(item.product.id)"
-                        ><i class="ti-close"></i
-                      ></a>
-                    </td>
-                  </tr>
-                  <tr v-else>
-                    <td colspan="7" class="text-center py-5">
-                      <h1><strong>Opps!</strong></h1>
-                      <h4>No products in wishlist</h4>
-                    </td>
-                  </tr>
-                </tbody>
-              </table>
+                </h6>
+                <div class="product_price">
+                  <span class="price">৳ {{ item.product.price }}</span>
+                </div>
+                <div class="rating_wrap">
+                  <div class="rating">
+                    <div
+                      class="product_rate"
+                      :style="{
+                        width: ((item.product.star ?? 0) / 5) * 100 + '%',
+                      }"
+                    ></div>
+                  </div>
+                  <span class="rating_num"
+                    >({{
+                      item.product.star
+                        ? (item.product.star * 20).toFixed(0) + "%"
+                        : "N/A"
+                    }})</span
+                  >
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -197,12 +179,38 @@ const removeWishList = async (productId) => {
   }
 };
 
-const addToCartItem = (productId) => {
-  cart.addToCart(productId);
-};
-
 onMounted(() => {
   loadWishlist();
 });
 </script>
-<style scoped></style>
+<style scoped>
+.wishlist-info {
+  position: relative;
+}
+
+.wishlist-info .product-remove {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  z-index: 5;
+}
+
+.wishlist-info .product-remove a i {
+  width: 28px;
+  height: 28px;
+  color: #ff324d;
+  border-radius: 10%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.25);
+  transition: all 0.2s ease;
+}
+
+.wishlist-info .product-remove a:hover i {
+  background: #ff324d;
+  color: #fff;
+  transform: scale(1.1);
+}
+</style>
