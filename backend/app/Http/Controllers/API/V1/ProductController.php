@@ -8,6 +8,7 @@ use App\Models\Product;
 use App\Models\ProductSlider;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class ProductController extends Controller
 {
@@ -24,13 +25,18 @@ class ProductController extends Controller
 
     public function featuredProducts(): JsonResponse
     {
-        $products = Product::with('brand', 'category', 'sliders', 'details')
+        try {
+            $products = Product::with('brand', 'category', 'sliders', 'details')
             ->where('remarks', 'featured')
             ->get();
 
         $products = $products->map(fn ($p) => ProductHelper::format($p));
 
         return $this->success($products, 'All featured products.');
+        } catch (\Exception $e) {
+            Log::error('Error fetching featured products: ' . $e->getMessage());
+            return $this->error('Failed to retrieve featured products.', 500);
+        }
     }
 
     public function show(string $slug): JsonResponse

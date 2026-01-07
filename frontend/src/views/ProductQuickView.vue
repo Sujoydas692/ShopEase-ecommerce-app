@@ -117,8 +117,11 @@
                   <span
                     v-for="(s, idx) in sizes"
                     :key="idx"
-                    @click="selectedSize = s"
-                    :class="{ active: selectedSize === s }"
+                    @click="hasStockForSize(s) && (selectedSize = s)"
+                    :class="{
+                      active: selectedSize === s,
+                      disabled: !hasStockForSize(s),
+                    }"
                   >
                     {{ s }}
                   </span>
@@ -156,10 +159,15 @@
                   class="btn btn-fill-out btn-addtocart"
                   type="button"
                   @click.prevent="addToCartItem(product.id)"
-                  :disabled="addingToCart"
+                  :disabled="addingToCart || isOutOfStock"
                 >
-                  <i class="icon-basket-loaded"></i>
-                  {{ addingToCart ? "Adding..." : "Add to cart" }}
+                  <i
+                    :class="isOutOfStock ? 'icon-ban' : 'icon-basket-loaded'"
+                  ></i>
+                  <span v-if="isOutOfStock">Out of Stock</span>
+                  <span v-else>
+                    {{ addingToCart ? "Adding..." : "Add to cart" }}
+                  </span>
                 </button>
                 <a class="add_compare" href="#"><i class="icon-shuffle"></i></a>
                 <a
@@ -291,6 +299,31 @@ const uniqueThumbnails = computed(() => {
   return allUniqueImages.value.slice(0, 4);
 });
 
+const isOutOfStock = computed(() => {
+  if (!props.product) return true;
+
+  if (
+    props.product.variations &&
+    props.product.variations.length > 0
+  ) {
+    const hasAnyStock = props.product.variations.some((v) => v.stock > 0);
+
+    return !hasAnyStock;
+  }
+
+  return props.product.stock <= 0;
+});
+
+const hasStockForSize = (size) => {
+  if (props.product.variations?.length > 0) {
+    return props.product.variations?.some(
+      (v) => v.size === size && v.stock > 0
+    );
+  }
+
+  return props.product?.stock > 0;
+};
+
 const selectedColor = ref(null);
 const selectedSize = ref(null);
 const displaySku = ref(props.product.sku ?? "N/A");
@@ -343,6 +376,11 @@ watch(selectedSize, () => {
 });
 
 const addToCartItem = async (productId) => {
+  if (isOutOfStock.value) {
+    toast.error("This product is out of stock");
+    return;
+  }
+
   if (sizes.value.length && !selectedSize.value) {
     toast.error("Please select a size");
     return;
@@ -590,6 +628,12 @@ onUnmounted(() => {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
+}
+
+.product_size_switch span.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  text-decoration: line-through;
 }
 
 @keyframes fadeIn {

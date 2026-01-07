@@ -78,11 +78,13 @@ class ProductHelper
             'title'         => $product->title,
             'slug'          => $product->slug,
             'price'         => $product->price,
+            'stock'         => $product->stock,
             'discount'      => $product->discount,
             'discount_type' => $product->discount_type,
             'image'         => $product->image,
             'short_desc'    => $product->short_desc,
             'star'          => $product->star,
+            'remarks'          => $product->remarks,
 
             'brand'     => $product->brand,
             'category'  => $product->category,

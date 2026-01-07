@@ -23,7 +23,7 @@ class ProductSliderFactory extends Factory
             'title' => $this->faker->sentence(3),
             'short_desc' => $this->faker->sentence(8),
             'price' => rand(100,1000),
-            'image' => 'https://picsum.photos/seed/' . $this->faker->unique()->numberBetween(1, 999999) . '/540/600',
+            'image' => 'https://picsum.photos/seed/' . $this->faker->unique()->numberBetween(1, 999999) . '/1920/500',
         ];
     }
 }

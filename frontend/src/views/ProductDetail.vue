@@ -62,7 +62,13 @@
             <div class="pr_detail">
               <div class="product_description">
                 <h4 class="product_title">
-                  <a href="#">{{ product?.title }}</a>
+                  <router-link
+                    :to="{
+                      name: 'productdetail',
+                      params: { slug: product?.slug },
+                    }"
+                    >{{ product?.title }}</router-link
+                  >
                 </h4>
                 <div class="product_price">
                   <span class="price">৳{{ product?.price }}</span>
@@ -136,8 +142,11 @@
                     <span
                       v-for="(s, idx) in sizes"
                       :key="idx"
-                      @click="selectedSize = s"
-                      :class="{ active: selectedSize === s }"
+                      @click="hasStockForSize(s) && (selectedSize = s)"
+                      :class="{
+                        active: selectedSize === s,
+                        disabled: !hasStockForSize(s),
+                      }"
                     >
                       {{ s }}
                     </span>
@@ -175,10 +184,15 @@
                     class="btn btn-fill-out btn-addtocart"
                     type="button"
                     @click.prevent="addToCartItem(product.id)"
-                    :disabled="addingToCart"
+                    :disabled="addingToCart || isOutOfStock"
                   >
-                    <i class="icon-basket-loaded"></i>
-                    {{ addingToCart ? "Adding..." : "Add to cart" }}
+                    <i
+                      :class="isOutOfStock ? 'icon-ban' : 'icon-basket-loaded'"
+                    ></i>
+                    <span v-if="isOutOfStock">Out of Stock</span>
+                    <span v-else>
+                      {{ addingToCart ? "Adding..." : "Add to cart" }}
+                    </span>
                   </button>
                   <a class="add_compare" href="#"
                     ><i class="icon-shuffle"></i
@@ -459,7 +473,7 @@
         <div class="row">
           <div class="col-12">
             <div class="heading_s1">
-              <h3>Releted Products</h3>
+              <h3>Related Products</h3>
             </div>
             <div
               class="releted_product_slider carousel_slider owl-carousel owl-theme"
@@ -845,7 +859,7 @@
   <!-- END MAIN CONTENT -->
 </template>
 <script setup>
-import { ref, computed, onMounted, onUnmounted, watch } from "vue";
+import { ref, computed, onMounted, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useCartStore } from "../store/cart";
 import { useAuth } from "../store/auth";
@@ -942,6 +956,28 @@ const selectedVariation = computed(() => {
   );
 });
 
+const isOutOfStock = computed(() => {
+  if (!product.value) return true;
+
+  if (product.value.variations && product.value.variations.length > 0) {
+    const hasAnyStock = product.value.variations.some((v) => v.stock > 0);
+
+    return !hasAnyStock;
+  }
+
+  return product.value.stock <= 0;
+});
+
+const hasStockForSize = (size) => {
+  if (product.value.variations?.length > 0) {
+    return product.value.variations?.some(
+      (v) => v.size === size && v.stock > 0
+    );
+  }
+
+  return product.value?.stock > 0;
+};
+
 watch([selectedSize, selectedColor], () => {
   if (selectedVariation.value?.sku) {
     displaySku.value = selectedVariation.value.sku;
@@ -980,6 +1016,11 @@ watch(selectedSize, () => {
 });
 
 const addToCartItem = async (productId) => {
+  if (isOutOfStock.value) {
+    toast.error("This product is out of stock");
+    return;
+  }
+
   if (sizes.value.length && !selectedSize.value) {
     toast.error("Please select a size");
     return;
@@ -1147,6 +1188,12 @@ onMounted(() => {
   display: flex;
   gap: 5px;
   flex-wrap: wrap;
+}
+
+.product_size_switch span.disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  text-decoration: line-through;
 }
 
 .thumbnail-container::-webkit-scrollbar {

@@ -19,9 +19,6 @@ return new class extends Migration
             $table->string('image3')->nullable();
             $table->string('image4')->nullable();
             $table->text('description')->nullable();
-            $table->string('color')->nullable();
-            $table->string('size')->nullable();
-            $table->string('stock')->nullable();
             $table->timestamps();
         });
     }
