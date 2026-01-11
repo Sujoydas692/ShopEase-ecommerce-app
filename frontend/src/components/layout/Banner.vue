@@ -96,60 +96,6 @@
       </a>
     </div>
   </div>
-
-  <!-- If no sliders from API, show default banner -->
-  <div
-    v-else
-    class="banner_section slide_medium shop_banner_slider staggered-animation-wrap"
-  >
-    <div
-      id="carouselExampleControls"
-      class="carousel slide carousel-fade light_arrow"
-      data-bs-ride="carousel"
-    >
-      <div class="carousel-inner">
-        <div
-          class="carousel-item active background_bg"
-          data-img-src="/assets/images/banner1.jpg"
-          style="background-image: url('/assets/images/banner1.jpg')"
-        >
-          <div class="banner_slide_content">
-            <div class="container">
-              <div class="row">
-                <div class="col-lg-7 col-9">
-                  <div class="banner_content overflow-hidden">
-                    <h5
-                      class="mb-3 staggered-animation font-weight-light"
-                      data-animation="slideInLeft"
-                      data-animation-delay="0.5s"
-                    >
-                      Get up to 50% off Today Only!
-                    </h5>
-                    <h2
-                      class="staggered-animation"
-                      data-animation="slideInLeft"
-                      data-animation-delay="1s"
-                    >
-                      Woman Fashion
-                    </h2>
-                    <router-link
-                      to="/shop"
-                      class="btn btn-fill-out rounded-0 staggered-animation text-uppercase"
-                      data-animation="slideInLeft"
-                      data-animation-delay="1.5s"
-                    >
-                      Shop Now
-                    </router-link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <!-- END SECTION BANNER -->
 </template>
 
 <script setup>
@@ -158,6 +104,8 @@ import apiClient from "../../lib/axiosClient";
 
 const sliders = ref([]);
 const loading = ref(true);
+
+const STORAGE_KEY = "home_sliders";
 
 const defaultImages = [
   "/assets/images/banner1.jpg",
@@ -169,13 +117,24 @@ const getDefaultImage = (index) => {
   return defaultImages[index] || defaultImages[0];
 };
 
+const loadFromStorage = () => {
+  const cached = localStorage.getItem(STORAGE_KEY);
+  if (cached) {
+    try {
+      sliders.value = JSON.parse(cached);
+    } catch (e) {
+      console.warn("Invalid slider cache");
+    }
+  }
+};
+
 const fetchSliders = async () => {
   try {
     loading.value = true;
     const response = await apiClient.get("/products/sliders");
 
     if (response.data.status && Array.isArray(response.data.data)) {
-      sliders.value = response.data.data.map((slider) => ({
+      const formatted = response.data.data.map((slider) => ({
         id: slider.id,
         title: slider.title || slider.product?.title || "Special Offer",
         subtitle:
@@ -185,11 +144,15 @@ const fetchSliders = async () => {
         product_id: slider.product_id,
         product: slider.product || null,
         url: slider.url || null,
-        is_active: slider.is_active || true,
-        order: slider.order || 0,
+        is_active: slider.is_active ?? true,
+        order: slider.order ?? 0,
       }));
 
-      sliders.value.sort((a, b) => a.order - b.order);
+      formatted.sort((a, b) => a.order - b.order);
+
+      sliders.value = formatted;
+
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(formatted));
     }
   } catch (error) {
     console.error("Error fetching sliders:", error);
@@ -200,6 +163,7 @@ const fetchSliders = async () => {
 };
 
 onMounted(() => {
+  loadFromStorage();
   fetchSliders();
 
   setTimeout(() => {
