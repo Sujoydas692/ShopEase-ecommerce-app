@@ -23,56 +23,49 @@ class ShoppingCartController extends Controller
         $user = auth()->user();
         $product = Product::with('variations')->findOrFail($request->product_id);
 
-        $availableSizes = $product->variations->pluck('size')->filter()->unique()->values();
-        $availableColors = $product->variations->pluck('color')->filter()->unique()->values();
+        $hasVariations = $product->variations->count() > 0;
 
-        if ($availableSizes->isNotEmpty()) {
-            if (! $request->filled('size')) {
-                return $this->error('Size is required', 400);
+        $variation = null;
+        $availableStock = 0;
+
+        if ($hasVariations) {
+            if (! $request->filled('size') || ! $request->filled('color')) {
+                return $this->error('Size and color are required.', 400);
             }
-            if (! $availableSizes->contains($request->size)) {
-                return $this->error('Size is not available.', 400);
+
+            $variation = $product->variations
+                ->where('size', $request->size)
+                ->where('color', $request->color)
+                ->first();
+
+            if (! $variation) {
+                return $this->error('Selected variation not available.', 400);
             }
+
+            $availableStock = $variation->stock;
+        } else {
+            $availableStock = $product->stock;
         }
-
-        if ($availableColors->isNotEmpty()) {
-            if (! $request->filled('color')) {
-                return $this->error('Color is required', 400);
-            }
-            if (! $availableColors->contains($request->color)) {
-                return $this->error('Color is not available.', 400);
-            }
-        }
-
-        $availableStock = $product->stock;
 
         $cart = Cart::where('user_id', $user->id)
             ->where('product_id', $product->id)
-            ->where('color', $request->color)
-            ->where('size', $request->size)
+            ->where('size', $hasVariations ? $request->size : null)
+            ->where('color', $hasVariations ? $request->color : null)
             ->first();
 
-        if ($cart) {
-            $newQty = $cart->qty + $request->qty;
+        $newQty = $request->qty + ($cart->qty ?? 0);
 
-            if ($newQty > $availableStock) {
-                return $this->error('You cannot add more than available stock.', 400);
-            }
-
-            $cart->qty = $newQty;
-            $cart->save();
-
-            return $this->success(null, 'Cart updated successfully.');
-        }
-
-        if ($request->qty > $availableStock) {
+        if ($newQty > $availableStock) {
             return $this->error('Requested quantity exceeds available stock.', 400);
         }
 
-        if ($product->discount && $product->discount > 0) {
-            $price = $product->discount_price;
-        } else {
-            $price = $product->price;
+        $price = $product->discount && $product->discount > 0
+            ? $product->discount_price
+            : $product->price;
+
+        if ($cart) {
+            $cart->update(['qty' => $newQty]);
+            return $this->success(null, 'Cart updated successfully.');
         }
 
         Cart::create([
@@ -80,8 +73,8 @@ class ShoppingCartController extends Controller
             'product_id' => $product->id,
             'qty' => $request->qty,
             'price' => $price,
-            'color' => $availableColors->isNotEmpty() ? $request->color : null,
-            'size' => $availableSizes->isNotEmpty() ? $request->size : null,
+            'size' => $hasVariations ? $request->size : null,
+            'color' => $hasVariations ? $request->color : null,
         ]);
 
         return $this->success(null, 'Product added to cart.');
@@ -93,14 +86,24 @@ class ShoppingCartController extends Controller
             ->where('user_id', auth()->id())
             ->firstOrFail();
 
-        $product = Product::findOrFail($cart->product_id);
+        $product = Product::with('variations')->findOrFail($cart->product_id);
 
-        if ($request->qty > $product->stock) {
-            return $this->error('Requested quantity exceeds available stock.', 400);
+        if ($cart->size || $cart->color) {
+            $variation = $product->variations
+                ->where('size', $cart->size)
+                ->where('color', $cart->color)
+                ->first();
+
+            if (! $variation || $request->qty > $variation->stock) {
+                return $this->error('Requested quantity exceeds available stock.', 400);
+            }
+        } else {
+            if ($request->qty > $product->stock) {
+                return $this->error('Requested quantity exceeds available stock.', 400);
+            }
         }
 
-        $cart->qty = $request->qty;
-        $cart->save();
+        $cart->update(['qty' => $request->qty]);
 
         return $this->success($cart, 'Cart quantity updated successfully.');
     }
