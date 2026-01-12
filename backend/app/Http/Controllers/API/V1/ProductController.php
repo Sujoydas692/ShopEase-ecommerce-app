@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Helpers\ProductHelper;
 use App\Http\Controllers\Controller;
+use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductSlider;
 use Illuminate\Http\JsonResponse;
@@ -59,5 +60,16 @@ class ProductController extends Controller
         $sliders = ProductSlider::with('product')->get();
 
         return $this->success($sliders, 'Product sliders retrieved successfully.');
+    }
+
+    public function productsByCategory($slug)
+    {
+        $products = Product::whereHas('category', function ($q) use ($slug) {
+            $q->where('slug', $slug);
+        })
+        ->with(['brand', 'category', 'sliders', 'details', 'variations'])
+        ->paginate(9);
+
+        return $this->success($products, 'Products retrieved successfully.');
     }
 }

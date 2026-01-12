@@ -18,7 +18,7 @@ import Footer from './Footer.vue';
 
 const route = useRoute();
 
-const hideBannerRoutes = ["login", "myaccount", "productdetail", "wishlist", "carts", "checkout", "ordercomplete"];
+const hideBannerRoutes = ["login", "myaccount", "productdetail", "wishlist", "carts", "checkout", "ordercomplete", "category.products"];
 
 const showBanner = computed(() => !hideBannerRoutes.includes(route.name));
 

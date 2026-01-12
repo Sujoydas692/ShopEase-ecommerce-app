@@ -10,8 +10,19 @@ class CategoryController extends Controller
 {
     public function index(): JsonResponse
     {
-        $brands = Category::select('id', 'name', 'image')->get();
+        $categories = Category::select('id', 'name', 'slug')->get();
 
-        return $this->success($brands, 'Categories retrieved successfully.');
+        return $this->success($categories, 'Categories retrieved successfully.');
+    }
+
+    public function show(string $slug): JsonResponse
+    {
+        $category = Category::where('slug', $slug)->first();
+
+        if (! $category) {
+            return $this->error('Category not found.', 404);
+        }
+
+        return $this->success($category, 'Category retrieved successfully.');
     }
 }

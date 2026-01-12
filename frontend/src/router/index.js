@@ -9,12 +9,23 @@ import Carts from "../views/Dashboard/Carts.vue";
 import CheckOut from "../views/Dashboard/CheckOut.vue";
 import OrderComplete from "../views/Dashboard/OrderComplete.vue";
 import ProductDetail from "../views/ProductDetail.vue";
+import CategoryProducts from "../views/CategoryProducts.vue";
 
 const routes = [
   {
     path: "/",
     name: "home",
     component: Home,
+  },
+  {
+    path: "/product-detail/:slug",
+    name: "productdetail",
+    component: ProductDetail,
+  },
+  {
+    path: "/products/category/:slug",
+    name: "category.products",
+    component: CategoryProducts,
   },
   {
     path: "/login",
@@ -26,12 +37,6 @@ const routes = [
     path: "/profile",
     name: "profile",
     component: Profile,
-    meta: { requiresAuth: true },
-  },
-  {
-    path: "/product-detail/:slug",
-    name: "productdetail",
-    component: ProductDetail,
     meta: { requiresAuth: true },
   },
   {

@@ -8,40 +8,19 @@
             <div
               class="d-flex align-items-center justify-content-center justify-content-md-start"
             >
-              <div class="lng_dropdown me-2">
-                <select name="countries" class="custome_select">
-                  <option
-                    value="en"
-                    data-image="/assets/images/eng.png"
-                    data-title="English"
-                  >
-                    English
-                  </option>
-                  <option
-                    value="fn"
-                    data-image="/assets/images/fn.png"
-                    data-title="France"
-                  >
-                    France
-                  </option>
-                  <option
-                    value="us"
-                    data-image="/assets/images/us.png"
-                    data-title="United States"
-                  >
-                    United States
-                  </option>
-                </select>
-              </div>
-              <div class="me-3">
-                <select name="countries" class="custome_select">
-                  <option value="USD" data-title="USD">USD</option>
-                  <option value="EUR" data-title="EUR">EUR</option>
-                  <option value="GBR" data-title="GBR">GBR</option>
-                </select>
-              </div>
               <ul class="contact_detail text-center text-lg-start">
-                <li><i class="ti-mobile"></i><span>123-456-7890</span></li>
+                <li>
+                  <i class="ti-mobile"></i
+                  ><a href="tel:01654578654">
+                    <span>01654578654</span>
+                  </a>
+                </li>
+                <li>
+                  <i class="ti-email"></i
+                  ><a href="mailto:subirdasujoy@gmail.com">
+                    <span>subirdasujoy@gmail.com</span>
+                  </a>
+                </li>
               </ul>
             </div>
           </div>
@@ -119,115 +98,9 @@
           >
             <ul class="navbar-nav">
               <li class="dropdown">
-                <a
-                  data-bs-toggle="dropdown"
-                  class="nav-link dropdown-toggle active"
-                  href="#"
-                  >Home</a
+                <router-link data-bs-toggle="dropdown" class="nav-link" to="/"
+                  >Home</router-link
                 >
-                <div class="dropdown-menu">
-                  <ul>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item active"
-                        href="index.html"
-                        >Fashion 1</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item"
-                        href="index-2.html"
-                        >Fashion 2</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item"
-                        href="index-3.html"
-                        >Furniture 1</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item"
-                        href="index-4.html"
-                        >Furniture 2</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item"
-                        href="index-5.html"
-                        >Electronics 1</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item"
-                        href="index-6.html"
-                        >Electronics 2</a
-                      >
-                    </li>
-                  </ul>
-                </div>
-              </li>
-              <li class="dropdown">
-                <a
-                  class="dropdown-toggle nav-link"
-                  href="#"
-                  data-bs-toggle="dropdown"
-                  >Pages</a
-                >
-                <div class="dropdown-menu">
-                  <ul>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item"
-                        href="about.html"
-                        >About Us</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item"
-                        href="contact.html"
-                        >Contact Us</a
-                      >
-                    </li>
-                    <li>
-                      <a class="dropdown-item nav-link nav_item" href="faq.html"
-                        >Faq</a
-                      >
-                    </li>
-                    <li>
-                      <a class="dropdown-item nav-link nav_item" href="404.html"
-                        >404 Error Page</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item"
-                        href="login.html"
-                        >Login</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item"
-                        href="signup.html"
-                        >Register</a
-                      >
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item nav-link nav_item"
-                        href="term-condition.html"
-                        >Terms and Conditions</a
-                      >
-                    </li>
-                  </ul>
-                </div>
               </li>
               <li class="dropdown dropdown-mega-menu">
                 <a
@@ -240,378 +113,83 @@
                   <ul class="mega-menu d-lg-flex">
                     <li class="mega-menu-col col-lg-3">
                       <ul>
-                        <li class="dropdown-header">Woman's</li>
-                        <li>
+                        <li class="dropdown-header">Categories</li>
+                        <li v-for="category in categories" :key="category.id">
+                          <router-link
+                            class="dropdown-item nav-link nav_item"
+                            :to="{
+                              name: 'category.products',
+                              params: { slug: category.slug },
+                            }"
+                            >{{ category.name }}</router-link
+                          >
+                        </li>
+                      </ul>
+                    </li>
+                    <li class="mega-menu-col col-lg-3">
+                      <ul>
+                        <li class="dropdown-header">Brands</li>
+                        <li v-for="brand in brands" :key="brand.id">
                           <a
                             class="dropdown-item nav-link nav_item"
                             href="shop-list-left-sidebar.html"
-                            >Vestibulum sed</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-left-sidebar.html"
-                            >Donec porttitor</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-right-sidebar.html"
-                            >Donec vitae facilisis</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-list.html"
-                            >Curabitur tempus</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-load-more.html"
-                            >Vivamus in tortor</a
+                            >{{ brand.name }}</a
                           >
                         </li>
                       </ul>
                     </li>
                     <li class="mega-menu-col col-lg-3">
                       <ul>
-                        <li class="dropdown-header">Men's</li>
+                        <li class="dropdown-header">Highlights</li>
                         <li>
-                          <a
+                          <router-link
                             class="dropdown-item nav-link nav_item"
-                            href="shop-cart.html"
-                            >Donec vitae ante ante</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="checkout.html"
-                            >Etiam ac rutrum</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="wishlist.html"
-                            >Quisque condimentum</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="compare.html"
-                            >Curabitur laoreet</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="order-completed.html"
-                            >Vivamus in tortor</a
-                          >
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="mega-menu-col col-lg-3">
-                      <ul>
-                        <li class="dropdown-header">Kid's</li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-product-detail.html"
-                            >Donec vitae facilisis</a
+                            to="/"
+                            >New Arrivals</router-link
                           >
                         </li>
                         <li>
                           <a
                             class="dropdown-item nav-link nav_item"
                             href="shop-product-detail-left-sidebar.html"
-                            >Quisque condimentum</a
+                            >Best Selling</a
                           >
                         </li>
                         <li>
                           <a
                             class="dropdown-item nav-link nav_item"
                             href="shop-product-detail-right-sidebar.html"
-                            >Etiam ac rutrum</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-product-detail-thumbnails-left.html"
-                            >Donec vitae ante ante</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-product-detail-thumbnails-left.html"
-                            >Donec porttitor</a
+                            >Featured</a
                           >
                         </li>
                       </ul>
                     </li>
                     <li class="mega-menu-col col-lg-3">
-                      <ul>
-                        <li class="dropdown-header">Accessories</li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-product-detail.html"
-                            >Donec vitae facilisis</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-product-detail-left-sidebar.html"
-                            >Quisque condimentum</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-product-detail-right-sidebar.html"
-                            >Etiam ac rutrum</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-product-detail-thumbnails-left.html"
-                            >Donec vitae ante ante</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-product-detail-thumbnails-left.html"
-                            >Donec porttitor</a
-                          >
-                        </li>
-                      </ul>
-                    </li>
-                  </ul>
-                  <div class="d-lg-flex menu_banners row g-3 px-3">
-                    <div class="col-sm-4">
-                      <div class="header-banner">
-                        <img
-                          src="/assets/images/menu_banner1.jpg"
-                          alt="menu_banner1"
-                        />
-                        <div class="banne_info">
-                          <h6>10% Off</h6>
-                          <h4>New Arrival</h4>
-                          <a href="#">Shop now</a>
+                      <div class="header_banner">
+                        <div class="header_banner_content">
+                          <div class="shop_banner">
+                            <div class="banner_img overlay_bg_40">
+                              <img
+                                src="/assets/images/shop_banner.jpg"
+                                alt="shop_banner"
+                              />
+                            </div>
+                            <div class="shop_bn_content">
+                              <h5 class="text-uppercase shop_subtitle">
+                                Special Offer
+                              </h5>
+                              <h3 class="text-uppercase shop_title">
+                                Up to 30% Off
+                              </h3>
+                              <router-link
+                                to="/"
+                                class="btn btn-white rounded-0 btn-sm text-uppercase"
+                              >
+                                Shop Now
+                              </router-link>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                      <div class="header-banner">
-                        <img
-                          src="/assets/images/menu_banner2.jpg"
-                          alt="menu_banner2"
-                        />
-                        <div class="banne_info">
-                          <h6>15% Off</h6>
-                          <h4>Men's Fashion</h4>
-                          <a href="#">Shop now</a>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="col-sm-4">
-                      <div class="header-banner">
-                        <img
-                          src="/assets/images/menu_banner3.jpg"
-                          alt="menu_banner3"
-                        />
-                        <div class="banne_info">
-                          <h6>23% Off</h6>
-                          <h4>Kids Fashion</h4>
-                          <a href="#">Shop now</a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </li>
-              <li class="dropdown">
-                <a
-                  class="dropdown-toggle nav-link"
-                  href="#"
-                  data-bs-toggle="dropdown"
-                  >Blog</a
-                >
-                <div class="dropdown-menu dropdown-reverse">
-                  <ul>
-                    <li>
-                      <a
-                        class="dropdown-item menu-link dropdown-toggler"
-                        href="#"
-                        >Grids</a
-                      >
-                      <div class="dropdown-menu">
-                        <ul>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-three-columns.html"
-                              >3 columns</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-four-columns.html"
-                              >4 columns</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-left-sidebar.html"
-                              >Left Sidebar</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-right-sidebar.html"
-                              >right Sidebar</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-standard-left-sidebar.html"
-                              >Standard Left Sidebar</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-standard-right-sidebar.html"
-                              >Standard right Sidebar</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item menu-link dropdown-toggler"
-                        href="#"
-                        >Masonry</a
-                      >
-                      <div class="dropdown-menu">
-                        <ul>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-masonry-three-columns.html"
-                              >3 columns</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-masonry-four-columns.html"
-                              >4 columns</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-masonry-left-sidebar.html"
-                              >Left Sidebar</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-masonry-right-sidebar.html"
-                              >right Sidebar</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item menu-link dropdown-toggler"
-                        href="#"
-                        >Single Post</a
-                      >
-                      <div class="dropdown-menu">
-                        <ul>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-single.html"
-                              >Default</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-single-left-sidebar.html"
-                              >left sidebar</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-single-slider.html"
-                              >slider post</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-single-video.html"
-                              >video post</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-single-audio.html"
-                              >audio post</a
-                            >
-                          </li>
-                        </ul>
-                      </div>
-                    </li>
-                    <li>
-                      <a
-                        class="dropdown-item menu-link dropdown-toggler"
-                        href="#"
-                        >List</a
-                      >
-                      <div class="dropdown-menu">
-                        <ul>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-list-left-sidebar.html"
-                              >left sidebar</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              class="dropdown-item nav-link nav_item"
-                              href="blog-list-right-sidebar.html"
-                              >right sidebar</a
-                            >
-                          </li>
-                        </ul>
                       </div>
                     </li>
                   </ul>
@@ -842,11 +420,13 @@
                       class="item_remove"
                       ><i class="ion-close"></i
                     ></a>
-                    <a href="#">
-                      <img
-                        :src="item.product.image"
-                        alt="cart_thumb1"
-                      />
+                    <router-link
+                      :to="{
+                        name: 'productdetail',
+                        params: { slug: item.product.slug },
+                      }"
+                    >
+                      <img :src="item.product.image" alt="cart_thumb1" />
 
                       <div>
                         <div class="fw-semibold">
@@ -863,7 +443,7 @@
                           {{ item.color ?? "" }}
                         </div>
                       </div>
-                    </a>
+                    </router-link>
                     <span class="cart_quantity">
                       {{ item.qty }} x
                       <span class="cart_amount">
@@ -905,15 +485,19 @@
 </template>
 
 <script setup>
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import { useAuth } from "../../store/auth";
 import { useCartStore } from "../../store/cart";
 import { toast } from "vue3-toastify";
 import { useRouter } from "vue-router";
+import apiClient from "../../lib/axiosClient";
 
 const auth = useAuth();
 const cart = useCartStore();
 const router = useRouter();
+
+const categories = ref([]);
+const brands = ref([]);
 
 const removeCartItem = (id) => {
   cart.removeCart(id);
@@ -923,6 +507,20 @@ onMounted(() => {
   if (auth.isAuthenticated) {
     cart.loadCartFromLocal();
     cart.loadCart();
+  }
+});
+
+onMounted(async () => {
+  try {
+    const [categoryRes, brandRes] = await Promise.all([
+      apiClient.get("/categories"),
+      apiClient.get("/brands"),
+    ]);
+
+    categories.value = categoryRes.data.data;
+    brands.value = brandRes.data.data;
+  } catch (error) {
+    console.error("Menu load failed", error);
   }
 });
 
