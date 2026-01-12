@@ -98,11 +98,13 @@ class CheckOutController extends Controller
                     $variation = $variationQuery->lockForUpdate()->first();
 
                     if (! $variation) {
-                        throw new \Exception('Product variation not found');
+                        throw new \Exception('Selected product variation no longer exists.');
                     }
 
                     if ($variation->stock < $cart->qty) {
-                        throw new \Exception('Variation stock not available');
+                        throw new \Exception(
+                            "Only {$variation->stock} item(s) left for this product."
+                        );
                     }
 
                     $variation->decrement('stock', $cart->qty);
@@ -116,7 +118,9 @@ class CheckOutController extends Controller
                     }
 
                     if ($product->stock < $cart->qty) {
-                        throw new \Exception('Product stock not available');
+                        throw new \Exception(
+                            "Only {$product->stock} item(s) left for this product."
+                        );
                     }
 
                     $product->decrement('stock', $cart->qty);
@@ -135,7 +139,7 @@ class CheckOutController extends Controller
             DB::rollBack();
             Log::error('Order Place Error: '.$e->getMessage());
 
-            return $this->error('Something went wrong.', 500);
+            return $this->error($e->getMessage(), 500);
         }
     }
 
