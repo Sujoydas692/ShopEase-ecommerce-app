@@ -86,6 +86,13 @@
             </div>
           </div>
         </div>
+        <div v-if="wishlist.length === 0" class="col-12 text-center">
+          <hr />
+          <br>
+          <h2>Your wishlist is empty!</h2>
+          <br>
+          <hr />
+        </div>
       </div>
     </div>
     <!-- END SECTION SHOP -->

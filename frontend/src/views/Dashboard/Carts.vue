@@ -52,12 +52,22 @@
                   </tr>
                   <tr v-for="item in cart.carts" :key="item.id">
                     <td class="product-thumbnail">
-                      <a href="#"
+                      <router-link
+                        :to="{
+                          name: 'productdetail',
+                          params: { slug: item.product.slug },
+                        }"
                         ><img :src="item.product.image" alt="product1"
-                      /></a>
+                      /></router-link>
                     </td>
                     <td class="product-name" data-title="Product">
-                      <a href="#">{{ item.product.title }}</a>
+                      <router-link
+                        :to="{
+                          name: 'productdetail',
+                          params: { slug: item.product.slug },
+                        }"
+                        >{{ item.product.title }}</router-link
+                      >
                     </td>
                     <td class="product-name" data-title="Size">
                       <span v-if="item.size">{{ item.size }}</span>
@@ -304,6 +314,7 @@
 import { onMounted } from "vue";
 import { useAuth } from "../../store/auth";
 import { useCartStore } from "../../store/cart";
+import router from "../../router";
 
 const auth = useAuth();
 const cart = useCartStore();
