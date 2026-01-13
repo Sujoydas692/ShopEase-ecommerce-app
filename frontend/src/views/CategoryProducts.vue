@@ -14,6 +14,7 @@
             <li class="breadcrumb-item">
               <router-link to="/">Home</router-link>
             </li>
+            <li class="breadcrumb-item active">Category</li>
             <li class="breadcrumb-item active">{{ category?.name }}</li>
           </ol>
         </div>
@@ -275,12 +276,18 @@ const openQuickView = async (product) => {
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
 
-  quickViewProduct.value = product;
-  quickViewVisible.value = true;
+  try {
+    const res = await apiClient.get(`/product/${product.slug}`);
 
-  setTimeout(() => {
-    isOpening.value = false;
-  }, 300);
+    quickViewProduct.value = res.data.data;
+    quickViewVisible.value = true;
+  } catch (e) {
+    console.error("Failed to load product for quick view", e);
+  } finally {
+    setTimeout(() => {
+      isOpening.value = false;
+    }, 300);
+  }
 };
 
 const closeQuickView = () => {

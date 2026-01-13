@@ -98,7 +98,7 @@
           >
             <ul class="navbar-nav">
               <li class="dropdown">
-                <router-link data-bs-toggle="dropdown" class="nav-link" to="/"
+                <router-link class="nav-link" to="/"
                   >Home</router-link
                 >
               </li>

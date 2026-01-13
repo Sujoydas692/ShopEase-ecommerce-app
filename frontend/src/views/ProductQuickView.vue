@@ -184,10 +184,17 @@
             <hr />
             <ul class="product-meta">
               <li>
-                SKU: <a href="#">{{ displaySku }}</a>
+                SKU: <a href="javascript:void(0)">{{ displaySku }}</a>
               </li>
               <li>
-                Category: <a href="#">{{ product.category?.name }}</a>
+                Category:
+                <router-link
+                  :to="{
+                    name: 'category.products',
+                    params: { slug: product?.category?.slug },
+                  }"
+                  >{{ product.category?.name }}</router-link
+                >
               </li>
               <li v-if="product.tags">
                 Tags:
@@ -299,13 +306,22 @@ const uniqueThumbnails = computed(() => {
   return allUniqueImages.value.slice(0, 4);
 });
 
+watch(
+  () => props.product,
+  (newProduct) => {
+    if (!newProduct) return;
+
+    if (allUniqueImages.value.length > 0) {
+      mainImage.value = allUniqueImages.value[0];
+    }
+  },
+  { immediate: true }
+);
+
 const isOutOfStock = computed(() => {
   if (!props.product) return true;
 
-  if (
-    props.product.variations &&
-    props.product.variations.length > 0
-  ) {
+  if (props.product.variations && props.product.variations.length > 0) {
     const hasAnyStock = props.product.variations.some((v) => v.stock > 0);
 
     return !hasAnyStock;

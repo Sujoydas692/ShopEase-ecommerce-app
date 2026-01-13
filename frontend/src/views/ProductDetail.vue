@@ -72,7 +72,7 @@
                 </h4>
                 <div class="product_price">
                   <span class="price">৳{{ product?.price }}</span>
-                  <del>$55.25</del>
+                  <del>৳55.25</del>
                   <div class="on_sale">
                     <span v-if="product?.discount">
                       <template v-if="product.discount_type === 'percentage'">
@@ -211,10 +211,17 @@
               <hr />
               <ul class="product-meta">
                 <li>
-                  SKU: <a href="#">{{ displaySku }}</a>
+                  SKU: <a href="javascript:void(0)">{{ displaySku }}</a>
                 </li>
                 <li>
-                  Category: <a href="#">{{ product?.category?.name }}</a>
+                  Category:
+                  <router-link
+                    :to="{
+                      name: 'category.products',
+                      params: { slug: product?.category?.slug },
+                    }"
+                    >{{ product?.category?.name }}</router-link
+                  >
                 </li>
                 <li v-if="product?.tags">
                   Tags:

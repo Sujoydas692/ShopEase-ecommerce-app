@@ -1096,7 +1096,6 @@ const sections = reactive({
 
 const loadFeaturedSlider = async () => {
   try {
-    console.log("Loading featured slider...");
     const res = await apiClient.get("/products/featured", {
       params: { remarks: "featured", all: true },
     });
