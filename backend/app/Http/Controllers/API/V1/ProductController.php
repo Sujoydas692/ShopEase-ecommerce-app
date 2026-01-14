@@ -72,4 +72,15 @@ class ProductController extends Controller
 
         return $this->success($products, 'Products retrieved successfully.');
     }
+
+    public function productsByBrand($slug)
+    {
+        $products = Product::whereHas('brand', function ($q) use ($slug) {
+            $q->where('slug', $slug);
+        })
+        ->with(['brand', 'category', 'sliders', 'details', 'variations'])
+        ->paginate(9);
+
+        return $this->success($products, 'Products retrieved successfully.');
+    }
 }

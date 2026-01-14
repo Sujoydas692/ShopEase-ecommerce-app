@@ -89,7 +89,16 @@
                 <ul>
                   <li>
                     <i class="linearicons-shield-check"></i> 1 Year
-                    {{ product.brand?.name }} Warranty
+                    <router-link
+                      :to="{
+                        name: 'brand.products',
+                        params: { slug: product?.brand?.slug },
+                      }"
+                      class="brand-link"
+                    >
+                      {{ product?.brand?.name }}
+                    </router-link>
+                    Warranty
                   </li>
                   <li><i class="linearicons-sync"></i> 30 Day Return Policy</li>
                   <li>
@@ -650,6 +659,11 @@ onUnmounted(() => {
   opacity: 0.4;
   pointer-events: none;
   text-decoration: line-through;
+}
+
+.brand-link {
+  color: #ff324d;
+  text-decoration: none;
 }
 
 @keyframes fadeIn {

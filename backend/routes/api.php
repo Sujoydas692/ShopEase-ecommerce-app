@@ -18,6 +18,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::post('login', [AuthController::class, 'login']);
 
     Route::get('brands', [BrandController::class, 'index']);
+    Route::get('/brand/{slug}', [BrandController::class, 'show']);
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('/category/{slug}', [CategoryController::class, 'show']);
     Route::get('products', [ProductController::class, 'index']);
@@ -25,6 +26,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('products/featured', [ProductController::class, 'featuredProducts']);
     Route::get('products/sliders', [ProductController::class, 'productSliders']);
     Route::get('/products/category/{slug}', [ProductController::class, 'productsByCategory']);
+    Route::get('/products/brand/{slug}', [ProductController::class, 'productsByBrand']);
 
     Route::get('/districts', [LocationController::class, 'district']);
     Route::get('/upazilas/{district_id}', [LocationController::class, 'upazila']);

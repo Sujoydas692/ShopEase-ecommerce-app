@@ -9,7 +9,7 @@ import Carts from "../views/Dashboard/Carts.vue";
 import CheckOut from "../views/Dashboard/CheckOut.vue";
 import OrderComplete from "../views/Dashboard/OrderComplete.vue";
 import ProductDetail from "../views/ProductDetail.vue";
-import CategoryProducts from "../views/CategoryProducts.vue";
+import CategoryBrandProducts from "../views/CategoryBrandProducts.vue";
 
 const routes = [
   {
@@ -25,7 +25,12 @@ const routes = [
   {
     path: "/products/category/:slug",
     name: "category.products",
-    component: CategoryProducts,
+    component: CategoryBrandProducts,
+  },
+  {
+    path: "/products/brand/:slug",
+    name: "brand.products",
+    component: CategoryBrandProducts,
   },
   {
     path: "/login",

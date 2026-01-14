@@ -98,9 +98,7 @@
           >
             <ul class="navbar-nav">
               <li class="dropdown">
-                <router-link class="nav-link" to="/"
-                  >Home</router-link
-                >
+                <router-link class="nav-link" to="/">Home</router-link>
               </li>
               <li class="dropdown dropdown-mega-menu">
                 <a
@@ -130,10 +128,13 @@
                       <ul>
                         <li class="dropdown-header">Brands</li>
                         <li v-for="brand in brands" :key="brand.id">
-                          <a
+                          <router-link
                             class="dropdown-item nav-link nav_item"
-                            href="shop-list-left-sidebar.html"
-                            >{{ brand.name }}</a
+                            :to="{
+                              name: 'brand.products',
+                              params: { slug: brand.slug },
+                            }"
+                            >{{ brand.name }}</router-link
                           >
                         </li>
                       </ul>

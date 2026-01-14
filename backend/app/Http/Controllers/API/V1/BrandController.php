@@ -14,4 +14,15 @@ class BrandController extends Controller
 
         return $this->success($brands, 'Brands retrieved successfully.');
     }
+
+    public function show(string $slug): JsonResponse
+    {
+        $brand = Brand::where('slug', $slug)->first();
+
+        if (! $brand) {
+            return $this->error('Brand not found.', 404);
+        }
+
+        return $this->success($brand, 'Brand retrieved successfully.');
+    }
 }

@@ -111,7 +111,15 @@
                   <ul>
                     <li>
                       <i class="linearicons-shield-check"></i> 1 Year
-                      {{ product?.brand?.name }}
+                      <router-link
+                        :to="{
+                          name: 'brand.products',
+                          params: { slug: product?.brand?.slug },
+                        }"
+                        class="brand-link"
+                      >
+                        {{ product?.brand?.name }}
+                      </router-link>
                       Brand Warranty
                     </li>
                     <li>
@@ -1234,6 +1242,11 @@ onMounted(() => {
 
 .add_wishlist.active-wish i {
   color: #ff324d !important;
+}
+
+.brand-link {
+  color: #ff324d;
+  text-decoration: none;
 }
 
 @media (max-width: 768px) {
