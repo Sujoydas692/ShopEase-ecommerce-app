@@ -5,33 +5,31 @@
     <div class="section pb_20">
       <div class="container">
         <div class="row">
-          <div class="col-md-6">
-            <div class="single_banner">
-              <img
-                src="/assets/images/shop_banner_img1.jpg"
-                alt="shop_banner_img1"
-              />
-              <div class="single_banner_info">
-                <h5 class="single_bn_title1">Super Sale</h5>
-                <h3 class="single_bn_title">New Collection</h3>
-                <a href="shop-left-sidebar.html" class="single_bn_link"
-                  >Shop Now</a
-                >
-              </div>
+          <div class="col-md-12">
+            <div class="heading_s1 text-center">
+              <h2>Categories</h2>
             </div>
-          </div>
-          <div class="col-md-6">
-            <div class="single_banner">
-              <img
-                src="/assets/images/shop_banner_img2.jpg"
-                alt="shop_banner_img2"
-              />
-              <div class="single_banner_info">
-                <h3 class="single_bn_title">New Season</h3>
-                <h4 class="single_bn_title1">Sale 40% Off</h4>
-                <a href="shop-left-sidebar.html" class="single_bn_link"
-                  >Shop Now</a
-                >
+            <div class="row shop_container">
+              <div
+                class="col-lg-3 col-md-4 col-6"
+                v-for="category in categories"
+                :key="category.id"
+              >
+                <div class="category-card">
+                  <router-link
+                    :to="{
+                      name: 'category.products',
+                      params: { slug: category.slug },
+                    }"
+                    class="category-link"
+                  >
+                    <div class="category-icon">
+                      <i class="ti-tag"></i>
+                    </div>
+
+                    <h6 class="category-title">{{ category.name }}</h6>
+                  </router-link>
+                </div>
               </div>
             </div>
           </div>
@@ -840,161 +838,6 @@
     </div>
     <!-- END SECTION SHOP -->
 
-    <!-- START SECTION TESTIMONIAL -->
-    <div class="section bg_redon">
-      <div class="container">
-        <div class="row justify-content-center">
-          <div class="col-md-6">
-            <div class="heading_s1 text-center">
-              <h2>Our Client Say!</h2>
-            </div>
-          </div>
-        </div>
-        <div class="row justify-content-center">
-          <div class="col-lg-9">
-            <div
-              class="testimonial_wrap testimonial_style1 carousel_slider owl-carousel owl-theme nav_style2"
-              data-nav="true"
-              data-dots="false"
-              data-center="true"
-              data-loop="true"
-              data-autoplay="true"
-              data-items="1"
-            >
-              <div class="testimonial_box">
-                <div class="testimonial_desc">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A
-                    aliquam amet animi blanditiis consequatur debitis dicta
-                    distinctio, enim error eum iste libero modi nam natus
-                    perferendis possimus quasi sint sit tempora voluptatem.
-                  </p>
-                </div>
-                <div class="author_wrap">
-                  <div class="author_img">
-                    <img src="/assets/images/user_img1.jpg" alt="user_img1" />
-                  </div>
-                  <div class="author_name">
-                    <h6>Lissa Castro</h6>
-                    <span>Designer</span>
-                  </div>
-                </div>
-              </div>
-              <div class="testimonial_box">
-                <div class="testimonial_desc">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A
-                    aliquam amet animi blanditiis consequatur debitis dicta
-                    distinctio, enim error eum iste libero modi nam natus
-                    perferendis possimus quasi sint sit tempora voluptatem.
-                  </p>
-                </div>
-                <div class="author_wrap">
-                  <div class="author_img">
-                    <img src="/assets/images/user_img2.jpg" alt="user_img2" />
-                  </div>
-                  <div class="author_name">
-                    <h6>Alden Smith</h6>
-                    <span>Designer</span>
-                  </div>
-                </div>
-              </div>
-              <div class="testimonial_box">
-                <div class="testimonial_desc">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A
-                    aliquam amet animi blanditiis consequatur debitis dicta
-                    distinctio, enim error eum iste libero modi nam natus
-                    perferendis possimus quasi sint sit tempora voluptatem.
-                  </p>
-                </div>
-                <div class="author_wrap">
-                  <div class="author_img">
-                    <img src="/assets/images/user_img3.jpg" alt="user_img3" />
-                  </div>
-                  <div class="author_name">
-                    <h6>Daisy Lana</h6>
-                    <span>Designer</span>
-                  </div>
-                </div>
-              </div>
-              <div class="testimonial_box">
-                <div class="testimonial_desc">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit. A
-                    aliquam amet animi blanditiis consequatur debitis dicta
-                    distinctio, enim error eum iste libero modi nam natus
-                    perferendis possimus quasi sint sit tempora voluptatem.
-                  </p>
-                </div>
-                <div class="author_wrap">
-                  <div class="author_img">
-                    <img src="/assets/images/user_img4.jpg" alt="user_img4" />
-                  </div>
-                  <div class="author_name">
-                    <h6>John Becker</h6>
-                    <span>Designer</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END SECTION TESTIMONIAL -->
-
-    <!-- START SECTION SHOP INFO -->
-    <div class="section pb_70">
-      <div class="container">
-        <div class="row g-0">
-          <div class="col-lg-4">
-            <div class="icon_box icon_box_style1">
-              <div class="icon">
-                <i class="flaticon-shipped"></i>
-              </div>
-              <div class="icon_box_content">
-                <h5>Free Delivery</h5>
-                <p>
-                  If you are going to use of Lorem, you need to be sure there
-                  anything
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="icon_box icon_box_style1">
-              <div class="icon">
-                <i class="flaticon-money-back"></i>
-              </div>
-              <div class="icon_box_content">
-                <h5>30 Day Return</h5>
-                <p>
-                  If you are going to use of Lorem, you need to be sure there
-                  anything
-                </p>
-              </div>
-            </div>
-          </div>
-          <div class="col-lg-4">
-            <div class="icon_box icon_box_style1">
-              <div class="icon">
-                <i class="flaticon-support"></i>
-              </div>
-              <div class="icon_box_content">
-                <h5>27/4 Support</h5>
-                <p>
-                  If you are going to use of Lorem, you need to be sure there
-                  anything
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- END SECTION SHOP INFO -->
-
     <!-- START SECTION SUBSCRIBE NEWSLETTER -->
     <div class="section bg_default small_pt small_pb">
       <div class="container">
@@ -1054,6 +897,8 @@ const cart = useCartStore();
 
 const router = useRouter();
 const wishlist = ref([]);
+
+const categories = ref([]);
 
 const quickViewProduct = ref(null);
 const quickViewVisible = ref(false);
@@ -1170,6 +1015,7 @@ const initCarousel = () => {
 
 onMounted(() => {
   loadWishlist();
+  loadCategories();
   loadFeaturedSlider();
   loadProducts("new");
   loadProducts("featured");
@@ -1177,6 +1023,20 @@ onMounted(() => {
   loadProducts("popular");
   loadProducts("trending");
 });
+
+const loadCategories = async () => {
+  const cached = localStorage.getItem("categories");
+
+  if (cached) {
+    categories.value = JSON.parse(cached);
+    return;
+  }
+
+  const res = await apiClient.get("/categories");
+  categories.value = res.data.data;
+
+  localStorage.setItem("categories", JSON.stringify(res.data.data));
+};
 
 const loadWishlist = async () => {
   if (!auth.isAuthenticated) {
@@ -1206,7 +1066,7 @@ const addToWish = async (productId) => {
       });
 
       toast.success(
-        Array.isArray(data?.message) ? data.message[0] : data?.message
+        Array.isArray(data?.message) ? data.message[0] : data?.message,
       );
 
       if (wishlist.value.includes(productId)) {
@@ -1235,5 +1095,56 @@ const addToCartItem = async (productId) => {
   padding: 9.5px 10px 10px 10px;
   background: #ff324d !important;
   color: #fff !important;
+}
+
+.category-card {
+  position: relative;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 18px 10px;
+  margin-bottom: 20px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.category-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 12px;
+  opacity: 0.15;
+  z-index: -1;
+}
+
+.category-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.15);
+}
+
+.category-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.category-icon {
+  width: 46px;
+  height: 46px;
+  margin: 0 auto 8px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  color: #ff324d;
+}
+
+.category-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin: 0;
 }
 </style>
