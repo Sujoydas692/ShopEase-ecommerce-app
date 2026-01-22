@@ -2413,7 +2413,9 @@ input.text {
 	position: absolute;
 	padding: 5px 0px 0;
 	top: 100%;
-	width: 100%;
+	width: max-content;
+	min-width: 200px;
+	max-width: 90vw;
 	left: 0;
 	right: 0;
 	box-shadow: 0px 5px 10px rgba(0,0,0,0.1);
@@ -2450,17 +2452,20 @@ input.text {
 	right: 15px;
 	top: 15px;
 }
+
 #navCatContent ul li .dropdown-menu {
 	left: 100%;
 	top: 0;
 	margin: 0;
 	border: 0;
-	min-width: 800px;
-	width: 100%;
+	width: max-content;
+	min-width: 100px;
+	max-width: 90vw;
 	right: 0;
 	box-shadow: 10px 16px 49px 0px rgba(38,42,46,0.05);
 	border-radius: 0;
 	padding: 0;
+	white-space: nowrap;
 }
 #navCatContent ul li .dropdown-menu .dropdown-header {
 	color: #333;
@@ -2507,7 +2512,7 @@ input.text {
 }
 .product_search_form {
 	position: relative;
-	max-width: 600px;
+	max-width: 834px;
 	width: 100%;
 }
 .product_search_form input {

@@ -10,9 +10,11 @@ class CategoryController extends Controller
 {
     public function index(): JsonResponse
     {
-        $categories = Category::select('id', 'name', 'image', 'slug')->get();
+        $categories = Category::select('id', 'name', 'slug', 'image')
+        ->with(['brands:id,name,slug'])
+        ->get();
 
-        return $this->success($categories, 'Categories retrieved successfully.');
+    return $this->success($categories, 'Categories with brands loaded');
     }
 
     public function show(string $slug): JsonResponse

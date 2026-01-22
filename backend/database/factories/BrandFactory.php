@@ -19,7 +19,7 @@ class BrandFactory extends Factory
     {
         $name = fake()->name();
         return [
-            'name' => fake()->name(),
+            'name' => $name,
             'slug' => Str::slug($name),
         ];
     }

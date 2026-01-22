@@ -75,12 +75,12 @@
                           </li>
                           <li
                             :class="{
-                              'active-wish': wishlist.includes(product.id),
+                              'active-wish': wishListStore.has(product.id),
                             }"
                           >
                             <a
                               href="javascript:void(0)"
-                              @click.prevent="addToWish(product.id)"
+                              @click.prevent="wishListStore.toggle(product.id)"
                               ><i class="icon-heart"></i
                             ></a>
                           </li>
@@ -184,12 +184,12 @@
                           </li>
                           <li
                             :class="{
-                              'active-wish': wishlist.includes(product.id),
+                              'active-wish': wishListStore.has(product.id),
                             }"
                           >
                             <a
                               href="javascript:void(0)"
-                              @click.prevent="addToWish(product.id)"
+                              @click.prevent="wishListStore.toggle(product.id)"
                               ><i class="icon-heart"></i
                             ></a>
                           </li>
@@ -377,19 +377,16 @@
 </template>
 <script setup>
 import { ref, reactive, onMounted, watch, computed } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 import apiClient from "../lib/axiosClient";
 import Pagination from "../components/Pagination.vue";
 import ProductQuickView from "./ProductQuickView.vue";
 import { useCartStore } from "../store/cart";
-import { toast } from "vue3-toastify";
-import { useAuth } from "../store/auth";
+import { useWishlistStore } from "../store/wishList";
 
-const auth = useAuth();
 const cart = useCartStore();
 
-const router = useRouter();
-const wishlist = ref([]);
+const wishListStore = useWishlistStore();
 
 const route = useRoute();
 const slug = ref(route.params.slug);
@@ -535,47 +532,6 @@ const loadBrand = async () => {
   }
 };
 
-const loadWishlist = async () => {
-  if (!auth.isAuthenticated) {
-    return;
-  }
-  try {
-    const { data } = await apiClient.get("/wish-list");
-
-    wishlist.value = data.data.map((item) => item.product_id);
-  } catch (error) {
-    console.error("Failed to load wishlist", error);
-  }
-};
-
-const addToWish = async (productId) => {
-  if (!auth.isAuthenticated) {
-    toast.warning("You need to login first!");
-
-    setTimeout(() => {
-      router.push("/login");
-      return;
-    }, 2000);
-  } else {
-    try {
-      const { data } = await apiClient.post("add/wish-list", {
-        product_id: productId,
-      });
-
-      toast.success(
-        Array.isArray(data?.message) ? data.message[0] : data?.message
-      );
-
-      if (wishlist.value.includes(productId)) {
-        wishlist.value = wishlist.value.filter((id) => id !== productId);
-      } else {
-        wishlist.value.push(productId);
-      }
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to add to wishlist");
-    }
-  }
-};
 const addToCartItem = async (productId) => {
   await cart.addToCart({
     productId,
@@ -585,7 +541,7 @@ const addToCartItem = async (productId) => {
 onMounted(() => {
   loadCategories();
   loadBrands();
-  loadWishlist();
+  wishListStore.loadWishlist();
 
   if (routeName.value === "category.products") {
     loadCategory();

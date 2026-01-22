@@ -10,4 +10,14 @@ class Category extends Model
     use HasFactory;
 
     protected $guarded = ['id', 'created_at', 'updated_at'];
+
+    public function brands()
+    {
+        return $this->belongsToMany(Brand::class, 'category_brand');
+    }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }

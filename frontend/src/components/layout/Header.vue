@@ -86,308 +86,87 @@
             class="collapse navbar-collapse justify-content-end"
             id="navbarSupportedContent"
           >
-            <ul class="navbar-nav">
-              <li class="dropdown">
-                <router-link class="nav-link" to="/">Home</router-link>
-              </li>
-              <li class="dropdown dropdown-mega-menu">
-                <a
-                  class="dropdown-toggle nav-link"
-                  href="#"
-                  data-bs-toggle="dropdown"
-                  >Products</a
+            <div class="category-col">
+              <div class="categories_wrap">
+                <button
+                  type="button"
+                  aria-expanded="false"
+                  class="categories_btn"
+                  @click="toggleCategory"
                 >
-                <div class="dropdown-menu">
-                  <ul class="mega-menu d-lg-flex">
-                    <li class="mega-menu-col col-lg-3">
-                      <ul>
-                        <li class="dropdown-header">Categories</li>
-                        <li v-for="category in categories" :key="category.id">
-                          <router-link
-                            class="dropdown-item nav-link nav_item"
-                            :to="{
-                              name: 'category.products',
-                              params: { slug: category.slug },
-                            }"
-                            >{{ category.name }}</router-link
+                  <i class="linearicons-menu"></i><span>All Category </span>
+                </button>
+                <div
+                  id="navCatContent"
+                  class="nav_cat navbar nav"
+                  :class="{ show: isCategoryOpen }"
+                >
+                  <ul>
+                    <li
+                      v-for="category in categories"
+                      :key="category.id"
+                      class="dropdown dropdown-mega-menu"
+                    >
+                      <div class="category-row">
+                        <router-link
+                          class="category-link"
+                          :to="{
+                            name: 'category.products',
+                            params: { slug: category.slug },
+                          }"
+                        >
+                          <i :class="category.image"></i>
+                          <span>{{ category.name }}</span>
+                          <div
+                            class="dropdown-toggle-icon"
+                            data-bs-toggle="dropdown"
                           >
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="mega-menu-col col-lg-3">
-                      <ul>
-                        <li class="dropdown-header">Brands</li>
-                        <li v-for="brand in brands" :key="brand.id">
-                          <router-link
-                            class="dropdown-item nav-link nav_item"
-                            :to="{
-                              name: 'brand.products',
-                              params: { slug: brand.slug },
-                            }"
-                            >{{ brand.name }}</router-link
-                          >
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="mega-menu-col col-lg-3">
-                      <ul>
-                        <li class="dropdown-header">Highlights</li>
-                        <li>
-                          <router-link
-                            class="dropdown-item nav-link nav_item"
-                            to="/"
-                            >New Arrivals</router-link
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-product-detail-left-sidebar.html"
-                            >Best Selling</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            class="dropdown-item nav-link nav_item"
-                            href="shop-product-detail-right-sidebar.html"
-                            >Featured</a
-                          >
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="mega-menu-col col-lg-3">
-                      <div class="header_banner">
-                        <div class="header_banner_content">
-                          <div class="shop_banner">
-                            <div class="banner_img overlay_bg_40">
-                              <img
-                                src="/assets/images/shop_banner.jpg"
-                                alt="shop_banner"
-                              />
-                            </div>
-                            <div class="shop_bn_content">
-                              <h5 class="text-uppercase shop_subtitle">
-                                Special Offer
-                              </h5>
-                              <h3 class="text-uppercase shop_title">
-                                Up to 30% Off
-                              </h3>
-                              <router-link
-                                to="/"
-                                class="btn btn-white rounded-0 btn-sm text-uppercase"
-                              >
-                                Shop Now
-                              </router-link>
-                            </div>
+                            <i class="linearicons-chevron-right"></i>
                           </div>
-                        </div>
+                        </router-link>
+                      </div>
+                      <div class="dropdown-menu">
+                        <ul>
+                          <li v-for="brand in category.brands" :key="brand.id">
+                            <router-link
+                              class="dropdown-item nav-link nav_item"
+                              :to="{
+                                name: 'brand.products',
+                                params: { slug: brand.slug },
+                              }"
+                            >
+                              {{ brand.name }}
+                            </router-link>
+                          </li>
+                        </ul>
                       </div>
                     </li>
                   </ul>
                 </div>
-              </li>
-              <li class="dropdown dropdown-mega-menu">
-                <a
-                  class="dropdown-toggle nav-link"
-                  href="#"
-                  data-bs-toggle="dropdown"
-                  >Shop</a
-                >
-                <div class="dropdown-menu">
-                  <ul class="mega-menu d-lg-flex">
-                    <li class="mega-menu-col col-lg-9">
-                      <ul class="d-lg-flex">
-                        <li class="mega-menu-col col-lg-4">
-                          <ul>
-                            <li class="dropdown-header">Shop Page Layout</li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-list.html"
-                                >shop List view</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-list-left-sidebar.html"
-                                >shop List Left Sidebar</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-list-right-sidebar.html"
-                                >shop List Right Sidebar</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-left-sidebar.html"
-                                >Left Sidebar</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-right-sidebar.html"
-                                >Right Sidebar</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-load-more.html"
-                                >Shop Load More</a
-                              >
-                            </li>
-                          </ul>
-                        </li>
-                        <li class="mega-menu-col col-lg-4">
-                          <ul>
-                            <li class="dropdown-header">Other Pages</li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-cart.html"
-                                >Cart</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="checkout.html"
-                                >Checkout</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="my-account.html"
-                                >My Account</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="wishlist.html"
-                                >Wishlist</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="compare.html"
-                                >compare</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="order-completed.html"
-                                >Order Completed</a
-                              >
-                            </li>
-                          </ul>
-                        </li>
-                        <li class="mega-menu-col col-lg-4">
-                          <ul>
-                            <li class="dropdown-header">Product Pages</li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-product-detail.html"
-                                >Default</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-product-detail-left-sidebar.html"
-                                >Left Sidebar</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-product-detail-right-sidebar.html"
-                                >Right Sidebar</a
-                              >
-                            </li>
-                            <li>
-                              <a
-                                class="dropdown-item nav-link nav_item"
-                                href="shop-product-detail-thumbnails-left.html"
-                                >Thumbnails Left</a
-                              >
-                            </li>
-                          </ul>
-                        </li>
-                      </ul>
-                    </li>
-                    <li class="mega-menu-col col-lg-3">
-                      <div class="header_banner">
-                        <div class="header_banner_content">
-                          <div class="shop_banner">
-                            <div class="banner_img overlay_bg_40">
-                              <img
-                                src="/assets/images/shop_banner.jpg"
-                                alt="shop_banner"
-                              />
-                            </div>
-                            <div class="shop_bn_content">
-                              <h5 class="text-uppercase shop_subtitle">
-                                New Collection
-                              </h5>
-                              <h3 class="text-uppercase shop_title">
-                                Sale 30% Off
-                              </h3>
-                              <a
-                                href="#"
-                                class="btn btn-white rounded-0 btn-sm text-uppercase"
-                                >Shop Now</a
-                              >
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </li>
-                  </ul>
+              </div>
+            </div>
+            <div class="product_search_form">
+              <form>
+                <div class="input-group">
+                  <div class="input-group-prepend"></div>
+                  <input
+                    class="form-control"
+                    placeholder="Search Product..."
+                    required=""
+                    type="text"
+                  />
+                  <button type="submit" class="search_btn">
+                    <i class="linearicons-magnifier"></i>
+                  </button>
                 </div>
-              </li>
-              <li>
-                <a class="nav-link nav_item" href="contact.html">Contact Us</a>
-              </li>
-            </ul>
+              </form>
+            </div>
           </div>
           <ul class="navbar-nav attr-nav align-items-center">
-            <li>
-              <a href="javascript:;" class="nav-link search_trigger"
-                ><i class="linearicons-magnifier"></i
-              ></a>
-              <div class="search_wrap">
-                <span class="close-search"
-                  ><i class="ion-ios-close-empty"></i
-                ></span>
-                <form>
-                  <input
-                    type="text"
-                    placeholder="Search"
-                    class="form-control"
-                    id="search_input"
-                  />
-                  <button type="submit" class="search_icon">
-                    <i class="ion-ios-search-strong"></i>
-                  </button>
-                </form>
-              </div>
-              <div class="search_overlay"></div>
-            </li>
             <li v-if="auth.isAuthenticated">
               <router-link to="/dashboard/wish-list" class="nav-link"
                 ><i class="linearicons-heart"></i
-                ><span class="wishlist_count" v-if="wishlistStore.count > 0">{{
+                ><span class="wishlist_count" v-if="wishlistStore.count >= 0">{{
                   wishlistStore.count
                 }}</span></router-link
               >
@@ -493,7 +272,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onBeforeUnmount } from "vue";
 import { useAuth } from "../../store/auth";
 import { useCartStore } from "../../store/cart";
 import { toast } from "vue3-toastify";
@@ -555,4 +334,110 @@ const myAccount = () => {
 const logout = () => {
   auth.logout();
 };
+
+const isCategoryOpen = ref(false);
+const isMobile = ref(false);
+
+const checkMobile = () => {
+  isMobile.value = window.innerWidth <= 991;
+};
+
+const toggleCategory = () => {
+  if (isMobile.value) {
+    isCategoryOpen.value = !isCategoryOpen.value;
+  }
+};
+
+onMounted(() => {
+  checkMobile();
+  window.addEventListener("resize", checkMobile);
+});
+
+onBeforeUnmount(() => {
+  window.removeEventListener("resize", checkMobile);
+});
 </script>
+<style scoped>
+#navbarSupportedContent {
+  gap: 10px;
+}
+.categories_btn {
+  padding: 14px 12px;
+  min-width: 160px;
+}
+
+.categories_btn span {
+  margin-left: 6px;
+}
+.category-col {
+  flex: 0 0 auto;
+  margin-left: 5px;
+}
+.categories_wrap {
+  position: relative;
+}
+#navCatContent {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  width: 280px;
+  background: #fff;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: all 0.2s ease;
+  z-index: 999;
+}
+
+@media (min-width: 992px) {
+  .categories_wrap:hover #navCatContent {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+  }
+}
+
+#navCatContent.show {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
+}
+
+.category-row {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  gap: 10px;
+}
+
+.category-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #292b2c;
+  text-decoration: none;
+  flex: 1;
+}
+
+.category-link span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dropdown-toggle-icon {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dropdown-toggle-icon i {
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+</style>

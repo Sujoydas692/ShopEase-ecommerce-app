@@ -241,11 +241,8 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, watch } from "vue";
 import quickViewManager from "../utils/quickViewManager";
-import { useAuth } from "../store/auth";
 import { useCartStore } from "../store/cart";
 import { toast } from "vue3-toastify";
-import { useRouter } from "vue-router";
-import apiClient from "../lib/axiosClient";
 import { useWishlistStore } from "../store/wishList";
 
 const props = defineProps({
@@ -254,9 +251,7 @@ const props = defineProps({
 
 const emit = defineEmits(["close"]);
 
-const auth = useAuth();
 const cart = useCartStore();
-const router = useRouter();
 const wishlistStore = useWishlistStore();
 
 const mainImage = ref("");
