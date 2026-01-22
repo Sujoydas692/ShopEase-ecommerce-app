@@ -33,16 +33,6 @@
                   >
                 </li>
                 <li v-if="auth.isAuthenticated">
-                  <router-link to="/dashboard/wish-list"
-                    ><i class="ti-heart"></i><span>Wishlist</span></router-link
-                  >
-                </li>
-                <li v-if="!auth.isAuthenticated">
-                  <a href="javascript:void(0)" @click.prevent="wishListShow"
-                    ><i class="ti-heart"></i><span>Wishlist</span></a
-                  >
-                </li>
-                <li v-if="auth.isAuthenticated">
                   <router-link to="/dashboard/my-account"
                     ><i class="ti-user"></i><span>My Account</span></router-link
                   >
@@ -394,6 +384,23 @@
               </div>
               <div class="search_overlay"></div>
             </li>
+            <li v-if="auth.isAuthenticated">
+              <router-link to="/dashboard/wish-list" class="nav-link"
+                ><i class="linearicons-heart"></i
+                ><span class="wishlist_count" v-if="wishlistStore.count > 0">{{
+                  wishlistStore.count
+                }}</span></router-link
+              >
+            </li>
+            <li v-if="!auth.isAuthenticated">
+              <a
+                href="javascript:void(0)"
+                @click.prevent="wishListShow"
+                class="nav-link"
+                ><i class="linearicons-heart"></i
+                ><span class="wishlist_count">0</span></a
+              >
+            </li>
             <li class="dropdown cart_dropdown">
               <a
                 class="nav-link cart_trigger"
@@ -492,10 +499,12 @@ import { useCartStore } from "../../store/cart";
 import { toast } from "vue3-toastify";
 import { useRouter } from "vue-router";
 import apiClient from "../../lib/axiosClient";
+import { useWishlistStore } from "../../store/wishList";
 
 const auth = useAuth();
 const cart = useCartStore();
 const router = useRouter();
+const wishlistStore = useWishlistStore();
 
 const categories = ref([]);
 const brands = ref([]);

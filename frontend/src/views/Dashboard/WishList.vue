@@ -28,12 +28,14 @@
     <!-- START SECTION SHOP -->
     <div class="section">
       <div class="container">
-        <div class="row shop_container">
+        <div
+          class="row shop_container"
+          v-if="!wishListStore.loading && wishlist.length"
+        >
           <div
             class="col-lg-3 col-md-4 col-6"
             v-for="item in wishlist"
             :key="item.id"
-            v-if="wishlist.length > 0"
           >
             <div class="product">
               <div class="wishlist-img-wrapper">
@@ -86,11 +88,14 @@
             </div>
           </div>
         </div>
-        <div v-if="wishlist.length === 0" class="col-12 text-center">
+        <div
+          v-else-if="!wishListStore.loading && wishlist.length === 0"
+          class="col-12 text-center"
+        >
           <hr />
-          <br>
+          <br />
           <h2>Your wishlist is empty!</h2>
-          <br>
+          <br />
           <hr />
         </div>
       </div>
@@ -135,59 +140,19 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
-import apiClient from "../../lib/axiosClient";
-import { useAuth } from "../../store/auth";
-import { useRouter } from "vue-router";
-import { toast } from "vue3-toastify";
-import { useCartStore } from "../../store/cart";
+import { onMounted, computed } from "vue";
+import { useWishlistStore } from "../../store/wishList";
 
-const auth = useAuth();
-const cart = useCartStore();
+const wishListStore = useWishlistStore();
 
-const router = useRouter();
-const wishlist = ref(JSON.parse(localStorage.getItem("wishlist")) || []);
+const wishlist = computed(() => wishListStore.products);
 
-const saveToLocalStorage = () => {
-  localStorage.setItem("wishlist", JSON.stringify(wishlist.value));
-};
-
-const loadWishlist = async () => {
-  if (!auth.isAuthenticated) {
-    return;
-  }
-  try {
-    const { data } = await apiClient.get("/wish-list");
-
-    wishlist.value = data.data;
-    saveToLocalStorage();
-  } catch (error) {
-    console.error("Failed to load wishlist", error);
-  }
-};
-
-const removeWishList = async (productId) => {
-  try {
-    const { data } = await apiClient.post("remove/wish-list", {
-      product_id: productId,
-    });
-
-    toast.success(
-      Array.isArray(data?.message) ? data.message[0] : data?.message
-    );
-
-    wishlist.value = wishlist.value.filter(
-      (item) => item.product_id !== productId
-    );
-
-    saveToLocalStorage();
-  } catch (error) {
-    toast.error(error.response?.data?.message || "Failed to remove wishlist");
-  }
+const removeWishList = (productId) => {
+  wishListStore.remove(productId);
 };
 
 onMounted(() => {
-  loadWishlist();
+  wishListStore.loadWishlist();
 });
 </script>
 <style scoped>
