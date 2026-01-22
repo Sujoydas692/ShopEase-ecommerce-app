@@ -6,29 +6,41 @@
       <div class="container">
         <div class="row">
           <div class="col-md-12">
-            <div class="heading_s1 text-center">
-              <h2>Categories</h2>
-            </div>
-            <div class="row shop_container">
-              <div
-                class="col-lg-3 col-md-4 col-6"
-                v-for="category in categories"
-                :key="category.id"
-              >
-                <div class="category-card">
-                  <router-link
-                    :to="{
-                      name: 'category.products',
-                      params: { slug: category.slug },
-                    }"
-                    class="category-link"
+            <div class="cat_overlap radius_all_5">
+              <div class="row align-items-center">
+                <div class="col-lg-3 col-md-4">
+                  <div class="text-center text-md-start">
+                    <h4>Categories</h4>
+                    <p class="mb-2">There are all kinds of categories here.</p>
+                  </div>
+                </div>
+                <div class="col-lg-9 col-md-8">
+                  <div
+                    class="cat_slider mt-4 mt-md-0 carousel_slider owl-carousel owl-theme nav_style5"
+                    data-loop="true"
+                    data-dots="false"
+                    data-nav="true"
+                    data-margin="30"
+                    data-responsive='{"0":{"items": "1"}, "380":{"items": "2"}, "991":{"items": "3"}, "1199":{"items": "4"}}'
                   >
-                    <div class="category-icon">
-                      <i class="ti-tag"></i>
+                    <div
+                      class="item"
+                      v-for="category in categories"
+                      :key="category.id"
+                    >
+                      <div class="categories_box">
+                        <router-link
+                          :to="{
+                            name: 'category.products',
+                            params: { slug: category.slug },
+                          }"
+                        >
+                          <i :class="category.image"></i>
+                          <span>{{ category.name }}</span>
+                        </router-link>
+                      </div>
                     </div>
-
-                    <h6 class="category-title">{{ category.name }}</h6>
-                  </router-link>
+                  </div>
                 </div>
               </div>
             </div>
@@ -883,7 +895,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, onMounted, nextTick } from "vue";
+import { ref, reactive, onMounted, nextTick, watch } from "vue";
 import apiClient from "../lib/axiosClient";
 import Pagination from "../components/Pagination.vue";
 import { useAuth } from "../store/auth";
@@ -988,7 +1000,7 @@ const loadProducts = async (type, page = 1) => {
 
 const initCarousel = () => {
   nextTick(() => {
-    const $slider = $(".product_slider");
+    const $slider = $(".product_slider, .cat_slider");
 
     if ($slider.length && typeof $.fn.owlCarousel !== "undefined") {
       if ($slider.hasClass("owl-loaded")) {
@@ -1029,6 +1041,9 @@ const loadCategories = async () => {
 
   if (cached) {
     categories.value = JSON.parse(cached);
+    nextTick(() => {
+      initCarousel();
+    });
     return;
   }
 
@@ -1036,7 +1051,16 @@ const loadCategories = async () => {
   categories.value = res.data.data;
 
   localStorage.setItem("categories", JSON.stringify(res.data.data));
+  nextTick(() => {
+    initCarousel();
+  });
 };
+
+watch(categories, () => {
+  nextTick(() => {
+    initCarousel();
+  });
+});
 
 const loadWishlist = async () => {
   if (!auth.isAuthenticated) {
@@ -1096,55 +1120,31 @@ const addToCartItem = async (productId) => {
   background: #ff324d !important;
   color: #fff !important;
 }
-
-.category-card {
-  position: relative;
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-radius: 12px;
-  padding: 18px 10px;
-  margin-bottom: 20px;
-  text-align: center;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
-  transition: all 0.3s ease;
-}
-
-.category-card::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  opacity: 0.15;
-  z-index: -1;
-}
-
-.category-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 18px 35px rgba(0, 0, 0, 0.15);
-}
-
-.category-link {
-  text-decoration: none;
-  color: inherit;
-  display: block;
-}
-
-.category-icon {
-  width: 46px;
-  height: 46px;
-  margin: 0 auto 8px;
-  border-radius: 50%;
+.categories_box {
+  height: 140px;
+  width: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 30px;
-  color: #ff324d;
+  text-align: center;
+  transition: all 0.3s ease;
 }
-
-.category-title {
+.categories_box a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.categories_box i {
+  font-size: 36px;
+  transition: color 0.3s ease;
+}
+.categories_box span {
   font-size: 14px;
-  font-weight: 600;
-  margin: 0;
+  transition: color 0.3s ease;
+}
+.categories_box:hover i,
+.categories_box:hover span {
+  color: #ff324d;
 }
 </style>
