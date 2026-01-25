@@ -61,6 +61,64 @@ class ProductController extends Controller
 
         return $this->success($sliders, 'Product sliders retrieved successfully.');
     }
+    public function search(Request $request): JsonResponse
+    {
+        $q = trim($request->get('q'));
+
+        if (! $q) {
+            return $this->success([
+                'items' => [],
+                'total' => 0,
+            ], 'Empty search query.');
+        }
+
+        $query = Product::query()
+            ->where(function ($query) use ($q) {
+                $query->where('title', 'like', "%{$q}%")
+                    ->orWhere('short_desc', 'like', "%{$q}%");
+            });
+
+        $total = $query->count();
+
+        $products = $query
+            ->with(['brand', 'category'])
+            ->limit(10)
+            ->get()
+            ->map(fn ($p) => ProductHelper::format($p));
+
+        return $this->success([
+            'items' => $products,
+            'total' => $total,
+        ], 'Search results.');
+    }
+    public function searchPaginate(Request $request): JsonResponse
+    {
+        $q = trim($request->get('q'));
+
+        if (! $q) {
+            $products = Product::with(['brand', 'category', 'sliders'])
+                ->paginate(20);
+
+            $products->getCollection()->transform(
+                fn ($p) => ProductHelper::format($p)
+            );
+
+            return $this->success($products, 'All products');
+        }
+
+        $products = Product::with(['brand', 'category', 'sliders'])
+            ->where(function ($query) use ($q) {
+                $query->where('title', 'like', "%{$q}%")
+                    ->orWhere('short_desc', 'like', "%{$q}%");
+            })
+            ->paginate(20);
+
+        $products->getCollection()->transform(
+            fn ($p) => ProductHelper::format($p)
+        );
+
+        return $this->success($products, 'Search products.');
+    }
 
     public function productsByCategory($slug)
     {

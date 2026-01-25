@@ -10,6 +10,7 @@ import CheckOut from "../views/Dashboard/CheckOut.vue";
 import OrderComplete from "../views/Dashboard/OrderComplete.vue";
 import ProductDetail from "../views/ProductDetail.vue";
 import CategoryBrandProducts from "../views/CategoryBrandProducts.vue";
+import Search from "../views/Search.vue";
 
 const routes = [
   {
@@ -21,6 +22,11 @@ const routes = [
     path: "/product-detail/:slug",
     name: "productdetail",
     component: ProductDetail,
+  },
+  {
+    path: "/search",
+    name: "search",
+    component: Search,
   },
   {
     path: "/products/category/:slug",

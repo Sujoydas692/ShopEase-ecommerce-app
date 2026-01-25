@@ -145,21 +145,50 @@
                 </div>
               </div>
             </div>
-            <div class="product_search_form">
-              <form>
+            <div class="product_search_form" ref="searchBox">
+              <form @submit.prevent="goToSearchPage">
                 <div class="input-group">
-                  <div class="input-group-prepend"></div>
                   <input
                     class="form-control"
                     placeholder="Search Product..."
-                    required=""
                     type="text"
+                    v-model="searchQuery"
+                    @input="searchProducts"
                   />
-                  <button type="submit" class="search_btn">
-                    <i class="linearicons-magnifier"></i>
-                  </button>
                 </div>
               </form>
+
+              <!-- SEARCH RESULT -->
+              <ul
+                v-if="showResults && searchResults.length"
+                class="search_result_list"
+              >
+                <li
+                  v-for="product in searchResults"
+                  :key="product.id"
+                  @click="goToProduct(product.slug)"
+                >
+                  <img :src="product.image" />
+                  <div>
+                    <p class="title">{{ product.title }}</p>
+                    <span class="price">৳ {{ product.price }}</span>
+                  </div>
+                </li>
+                <li
+                  v-if="totalResults > 10"
+                  class="view_all"
+                  @click="goToSearchPage"
+                >
+                  View all {{ totalResults }} results →
+                </li>
+              </ul>
+
+              <div
+                v-if="showResults && !searchResults.length && searchQuery"
+                class="search_empty"
+              >
+                No product found
+              </div>
             </div>
           </div>
           <ul class="navbar-nav attr-nav align-items-center">
@@ -287,6 +316,75 @@ const wishlistStore = useWishlistStore();
 
 const categories = ref([]);
 const brands = ref([]);
+
+const searchQuery = ref("");
+const searchResults = ref([]);
+const showResults = ref(false);
+const searchBox = ref(null);
+let searchTimeout = null;
+
+const totalResults = ref(0);
+
+const goToSearchPage = () => {
+  if (!searchQuery.value.trim()) return;
+
+  showResults.value = false;
+
+  router.push({
+    name: "search",
+    query: {
+      q: searchQuery.value,
+    },
+  });
+};
+
+const searchProducts = () => {
+  clearTimeout(searchTimeout);
+
+  if (!searchQuery.value.trim()) {
+    searchResults.value = [];
+    totalResults.value = 0;
+    showResults.value = false;
+    return;
+  }
+
+  searchTimeout = setTimeout(async () => {
+    try {
+      const res = await apiClient.get("/products/search", {
+        params: { q: searchQuery.value },
+      });
+
+      searchResults.value = res.data.data.items;
+      totalResults.value = res.data.data.total;
+      showResults.value = true;
+    } catch (e) {
+      console.error("Search failed", e);
+    }
+  }, 400);
+};
+
+const goToProduct = (slug) => {
+  showResults.value = false;
+  searchQuery.value = "";
+  router.push({
+    name: "productdetail",
+    params: { slug },
+  });
+};
+
+const handleClickOutside = (e) => {
+  if (searchBox.value && !searchBox.value.contains(e.target)) {
+    showResults.value = false;
+  }
+};
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside);
+});
 
 const removeCartItem = (id) => {
   cart.removeCart(id);
@@ -439,5 +537,70 @@ onBeforeUnmount(() => {
 .dropdown-toggle-icon i {
   font-size: 12px !important;
   font-weight: 900 !important;
+}
+.product_search_form {
+  position: relative;
+}
+
+.search_result_list {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #eee;
+  z-index: 1000;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search_result_list li {
+  display: flex;
+  gap: 10px;
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.search_result_list li:hover {
+  background: #f9f9f9;
+}
+
+.search_result_list img {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+}
+
+.search_result_list .title {
+  font-size: 14px;
+  margin: 0;
+}
+
+.search_result_list .price {
+  font-size: 13px;
+  color: #ff324d;
+}
+
+.search_empty {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: #fff;
+  padding: 10px;
+  border: 1px solid #eee;
+  font-size: 14px;
+}
+.view_all {
+  padding: 10px;
+  text-align: center;
+  font-weight: 600;
+  cursor: pointer;
+  background: #f8f9fa;
+}
+
+.view_all:hover {
+  background: #eee;
 }
 </style>

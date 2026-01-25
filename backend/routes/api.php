@@ -19,12 +19,16 @@ Route::group(['prefix' => 'v1'], function () {
 
     Route::get('brands', [BrandController::class, 'index']);
     Route::get('/brand/{slug}', [BrandController::class, 'show']);
+
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('/category/{slug}', [CategoryController::class, 'show']);
+
     Route::get('products', [ProductController::class, 'index']);
     Route::get('/product/{slug}', [ProductController::class, 'show']);
     Route::get('products/featured', [ProductController::class, 'featuredProducts']);
     Route::get('products/sliders', [ProductController::class, 'productSliders']);
+    Route::get('/products/search', [ProductController::class, 'search']);
+    Route::get('/products/search-paginate', [ProductController::class, 'searchPaginate']);
     Route::get('/products/category/{slug}', [ProductController::class, 'productsByCategory']);
     Route::get('/products/brand/{slug}', [ProductController::class, 'productsByBrand']);
 
