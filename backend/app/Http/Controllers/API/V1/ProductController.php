@@ -74,8 +74,7 @@ class ProductController extends Controller
 
         $query = Product::query()
             ->where(function ($query) use ($q) {
-                $query->where('title', 'like', "%{$q}%")
-                    ->orWhere('short_desc', 'like', "%{$q}%");
+                $query->where('title', 'like', "%{$q}%");
             });
 
         $total = $query->count();
@@ -108,8 +107,7 @@ class ProductController extends Controller
 
         $products = Product::with(['brand', 'category', 'sliders'])
             ->where(function ($query) use ($q) {
-                $query->where('title', 'like', "%{$q}%")
-                    ->orWhere('short_desc', 'like', "%{$q}%");
+                $query->where('title', 'like', "%{$q}%");
             })
             ->paginate(20);
 
