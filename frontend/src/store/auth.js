@@ -2,6 +2,8 @@ import { defineStore } from "pinia";
 import apiClient from "../lib/axiosClient";
 import router from "../router";
 import { toast } from "vue3-toastify";
+import { useCartStore } from "./cart";
+import { useWishlistStore } from "./wishList";
 
 export const useAuth = defineStore("auth", {
   state: () => ({
@@ -56,6 +58,12 @@ export const useAuth = defineStore("auth", {
           this.user = { email: this.email };
           localStorage.setItem("user", JSON.stringify(this.user));
 
+          const cartStore = useCartStore();
+          const wishlistStore = useWishlistStore();
+
+          await cartStore.loadCart();
+          await wishlistStore.loadWishlist();
+
           toast.success(this.message);
 
           setTimeout(() => {
@@ -71,15 +79,25 @@ export const useAuth = defineStore("auth", {
     },
 
     logout() {
+      const cartStore = useCartStore();
+      const wishlistStore = useWishlistStore();
+
+      cartStore.clearCart();
+      wishlistStore.clear();
+
       this.access_token = null;
       localStorage.removeItem("access_token");
+
       this.user = null;
       localStorage.removeItem("user");
+
       this.email = "";
+
+      toast.success("Logout successful.");
+
       setTimeout(() => {
         router.push("/login");
-      }, 1000);
-      toast.success("Logout successful.");
+      }, 500);
     },
   },
 });

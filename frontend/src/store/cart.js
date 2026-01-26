@@ -210,5 +210,10 @@ export const useCartStore = defineStore("cart", {
         toast.error(error.response?.data?.message || "Failed to clear cart");
       }
     },
+
+    clearCart() {
+      this.carts = [];
+      localStorage.removeItem("cart_items");
+    }
   },
 });

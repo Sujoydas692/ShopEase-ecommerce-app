@@ -163,7 +163,17 @@
                 v-if="showResults && searchResults.length"
                 class="search_result_list"
               >
+                <li class="search_result_header">
+                  <span class="result_info">
+                    Showing {{ searchResults.length }} out of
+                    {{ totalResults }} products
+                  </span>
+                  <span class="view_all_link" @click="goToSearchPage">
+                    View All →
+                  </span>
+                </li>
                 <li
+                  class="product_click"
                   v-for="product in searchResults"
                   :key="product.id"
                   @click="goToProduct(product.slug)"
@@ -173,13 +183,6 @@
                     <p class="title">{{ product.title }}</p>
                     <span class="price">৳ {{ product.price }}</span>
                   </div>
-                </li>
-                <li
-                  v-if="totalResults > 10"
-                  class="view_all"
-                  @click="goToSearchPage"
-                >
-                  View all {{ totalResults }} results →
                 </li>
               </ul>
 
@@ -301,7 +304,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, onBeforeUnmount } from "vue";
+import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { useAuth } from "../../store/auth";
 import { useCartStore } from "../../store/cart";
 import { toast } from "vue3-toastify";
@@ -447,6 +450,27 @@ const toggleCategory = () => {
 };
 
 onMounted(() => {
+  if (auth.isAuthenticated) {
+    wishlistStore.loadWishlist();
+    cart.loadCart();
+  }
+});
+
+watch(
+  () => auth.isAuthenticated,
+  async (isLoggedIn) => {
+    if (isLoggedIn) {
+      await wishlistStore.loadWishlist();
+      await cart.loadCart();
+    } else {
+      wishlistStore.clearWishlist();
+      cart.clearCart();
+    }
+  },
+  { immediate: true },
+);
+
+onMounted(() => {
   checkMobile();
   window.addEventListener("resize", checkMobile);
 });
@@ -558,8 +582,11 @@ onBeforeUnmount(() => {
   display: flex;
   gap: 10px;
   padding: 10px;
-  cursor: pointer;
   border-bottom: 1px solid #f1f1f1;
+}
+
+.search_result_list .product_click {
+  cursor: pointer;
 }
 
 .search_result_list li:hover {
@@ -582,6 +609,35 @@ onBeforeUnmount(() => {
   color: #ff324d;
 }
 
+.search_result_header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #f9f9f9;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-bottom: 1px solid #eee;
+}
+
+.search_result_header .result_info {
+  color: #555;
+}
+
+.search_result_header .view_all_link {
+  color: #ff324d;
+  cursor: pointer;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.search_result_header .view_all_link:hover {
+  text-decoration: underline;
+}
+
 .search_empty {
   position: absolute;
   top: 100%;
@@ -591,16 +647,5 @@ onBeforeUnmount(() => {
   padding: 10px;
   border: 1px solid #eee;
   font-size: 14px;
-}
-.view_all {
-  padding: 10px;
-  text-align: center;
-  font-weight: 600;
-  cursor: pointer;
-  background: #f8f9fa;
-}
-
-.view_all:hover {
-  background: #eee;
 }
 </style>
