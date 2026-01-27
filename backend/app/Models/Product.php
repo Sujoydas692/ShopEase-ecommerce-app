@@ -36,6 +36,11 @@ class Product extends Model
         return $this->hasMany(ProductVariation::class);
     }
 
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
     public function scopeProductFilter($query, $request)
     {
         if ($request->filled('category_id')){

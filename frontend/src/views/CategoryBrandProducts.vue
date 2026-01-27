@@ -143,11 +143,10 @@
                           ></div>
                         </div>
                         <span class="rating_num"
-                          >({{
-                            product.star
-                              ? (product.star * 20).toFixed(0) + "%"
-                              : "N/A"
-                          }})</span
+                          >{{ product.star ? product.star.toFixed(1) : "N/A" }}
+                          <small
+                            >({{ product.review_count ?? 0 }} reviews)</small
+                          ></span
                         >
                       </div>
                       <div class="pr_desc">
@@ -252,11 +251,10 @@
                           ></div>
                         </div>
                         <span class="rating_num"
-                          >({{
-                            product.star
-                              ? (product.star * 20).toFixed(0) + "%"
-                              : "N/A"
-                          }})</span
+                          >{{ product.star ? product.star.toFixed(1) : "N/A" }}
+                          <small
+                            >({{ product.review_count ?? 0 }} reviews)</small
+                          ></span
                         >
                       </div>
                       <div class="pr_desc">

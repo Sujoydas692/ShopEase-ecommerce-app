@@ -43,7 +43,7 @@ class ProductController extends Controller
     public function show(string $slug): JsonResponse
     {
         $product = Product::with([
-            'brand', 'category', 'sliders', 'details', 'variations',
+            'brand', 'category', 'sliders', 'details', 'variations', 'reviews'
         ])->where('slug', $slug)->first();
 
         if (! $product) {
@@ -123,7 +123,7 @@ class ProductController extends Controller
         $products = Product::whereHas('category', function ($q) use ($slug) {
             $q->where('slug', $slug);
         })
-        ->with(['brand', 'category', 'sliders', 'details', 'variations'])
+        ->with(['brand', 'category', 'sliders', 'details', 'variations', 'reviews'])
         ->paginate(9);
 
         return $this->success($products, 'Products retrieved successfully.');
@@ -134,7 +134,7 @@ class ProductController extends Controller
         $products = Product::whereHas('brand', function ($q) use ($slug) {
             $q->where('slug', $slug);
         })
-        ->with(['brand', 'category', 'sliders', 'details', 'variations'])
+        ->with(['brand', 'category', 'sliders', 'details', 'variations', 'reviews'])
         ->paginate(9);
 
         return $this->success($products, 'Products retrieved successfully.');

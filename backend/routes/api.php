@@ -9,6 +9,7 @@ use App\Http\Controllers\API\V1\LocationController;
 use App\Http\Controllers\API\V1\OrderController;
 use App\Http\Controllers\API\V1\ProductController;
 use App\Http\Controllers\API\V1\ProductWishListController;
+use App\Http\Controllers\Api\V1\ReviewController;
 use App\Http\Controllers\API\V1\ShoppingCartController;
 use Illuminate\Support\Facades\Route;
 
@@ -31,6 +32,9 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('/products/search-paginate', [ProductController::class, 'searchPaginate']);
     Route::get('/products/category/{slug}', [ProductController::class, 'productsByCategory']);
     Route::get('/products/brand/{slug}', [ProductController::class, 'productsByBrand']);
+
+    Route::get('/products/{id}/reviews', [ReviewController::class, 'index']);
+    Route::post('/products/{id}/reviews', [ReviewController::class, 'store']);
 
     Route::get('/districts', [LocationController::class, 'district']);
     Route::get('/upazilas/{district_id}', [LocationController::class, 'upazila']);

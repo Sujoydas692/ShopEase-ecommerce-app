@@ -73,6 +73,18 @@ class ProductHelper
             $variationBasedSku = $firstVariation->sku ?? null;
         }
 
+        $reviews = $product->reviews
+            ? $product->reviews->map(function ($review) {
+                return [
+                    'id' => $review->id,
+                    'name' => $review->name,
+                    'rating' => $review->rating,
+                    'comment' => $review->comment,
+                    'created_at' => $review->created_at,
+                ];
+            })->values()
+            : [];
+
         return [
             'id'            => $product->id,
             'title'         => $product->title,
@@ -85,6 +97,9 @@ class ProductHelper
             'short_desc'    => $product->short_desc,
             'star'          => $product->star,
             'remarks'          => $product->remarks,
+
+            'reviews'       => $reviews,
+            'review_count' => count($reviews),
 
             'brand'     => $product->brand,
             'category'  => $product->category,

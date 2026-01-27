@@ -95,11 +95,10 @@
                     ></div>
                   </div>
                   <span class="rating_num"
-                    >({{
-                      product?.star
-                        ? (product?.star * 20).toFixed(0) + "%"
-                        : "N/A"
-                    }})</span
+                    >{{ product?.star ? product.star.toFixed(1) : "N/A" }}
+                    <small
+                      >({{ product?.review_count ?? 0 }} reviews)</small
+                    ></span
                   >
                 </div>
                 <div class="pr_desc">
@@ -290,7 +289,7 @@
                     role="tab"
                     aria-controls="Reviews"
                     aria-selected="false"
-                    >Reviews (2)</a
+                    >Reviews ({{ product?.review_count }})</a
                   >
                 </li>
               </ul>
@@ -313,113 +312,80 @@
                 >
                   <div class="comments">
                     <h5 class="product_tab_title">
-                      2 Review For <span>Blue Dress For Woman</span>
+                      ({{ product?.review_count }}) Review'(s) For
+                      <span>{{ product?.title }}</span>
                     </h5>
                     <ul class="list_none comment_list mt-4">
-                      <li>
-                        <div class="comment_img">
-                          <img src="/assets/images/user1.jpg" alt="user1" />
-                        </div>
+                      <li v-for="review in product?.reviews" :key="review.id">
                         <div class="comment_block">
                           <div class="rating_wrap">
                             <div class="rating">
                               <div
                                 class="product_rate"
-                                style="width: 80%"
+                                :style="{
+                                  width: (review.rating / 5) * 100 + '%',
+                                }"
                               ></div>
                             </div>
                           </div>
                           <p class="customer_meta">
-                            <span class="review_author">Alea Brooks</span>
-                            <span class="comment-date">March 5, 2018</span>
+                            <span class="review_author">{{ review.name }}</span>
+                            <span class="comment-date">{{
+                              formatDate(review.created_at)
+                            }}</span>
                           </p>
                           <div class="description">
                             <p>
-                              Lorem Ipsumin gravida nibh vel velit auctor
-                              aliquet. Aenean sollicitudin, lorem quis bibendum
-                              auctor, nisi elit consequat ipsum, nec sagittis
-                              sem nibh id elit. Duis sed odio sit amet nibh
-                              vulputate
+                              {{ review.comment }}
                             </p>
                           </div>
                         </div>
                       </li>
-                      <li>
-                        <div class="comment_img">
-                          <img src="/assets/images/user2.jpg" alt="user2" />
-                        </div>
-                        <div class="comment_block">
-                          <div class="rating_wrap">
-                            <div class="rating">
-                              <div
-                                class="product_rate"
-                                style="width: 60%"
-                              ></div>
-                            </div>
-                          </div>
-                          <p class="customer_meta">
-                            <span class="review_author">Grace Wong</span>
-                            <span class="comment-date">June 17, 2018</span>
-                          </p>
-                          <div class="description">
-                            <p>
-                              It is a long established fact that a reader will
-                              be distracted by the readable content of a page
-                              when looking at its layout. The point of using
-                              Lorem Ipsum is that it has a more-or-less normal
-                              distribution of letters
-                            </p>
-                          </div>
-                        </div>
+                      <li v-if="!product?.reviews?.length">
+                        <p>No reviews yet.</p>
                       </li>
                     </ul>
                   </div>
                   <div class="review_form field_form">
                     <h5>Add a review</h5>
-                    <form class="row mt-3">
+                    <form class="row mt-3" @submit.prevent="submitReview">
                       <div class="form-group col-12 mb-3">
                         <div class="star_rating">
-                          <span data-value="1"
-                            ><i class="far fa-star"></i
-                          ></span>
-                          <span data-value="2"
-                            ><i class="far fa-star"></i
-                          ></span>
-                          <span data-value="3"
-                            ><i class="far fa-star"></i
-                          ></span>
-                          <span data-value="4"
-                            ><i class="far fa-star"></i
-                          ></span>
-                          <span data-value="5"
-                            ><i class="far fa-star"></i
-                          ></span>
+                          <span
+                            v-for="i in 5"
+                            :key="i"
+                            @click="reviewForm.rating = i"
+                          >
+                            <i
+                              :class="[
+                                i <= reviewForm.rating
+                                  ? 'fas fa-star'
+                                  : 'far fa-star',
+                              ]"
+                            ></i>
+                          </span>
                         </div>
                       </div>
                       <div class="form-group col-12 mb-3">
                         <textarea
-                          required="required"
+                          v-model="reviewForm.comment"
                           placeholder="Your review *"
                           class="form-control"
-                          name="message"
                           rows="4"
                         ></textarea>
                       </div>
                       <div class="form-group col-md-6 mb-3">
                         <input
-                          required="required"
+                          v-model="reviewForm.name"
                           placeholder="Enter Name *"
                           class="form-control"
-                          name="name"
-                          type="text"
                         />
                       </div>
                       <div class="form-group col-md-6 mb-3">
                         <input
-                          required="required"
+                          v-model="reviewForm.email"
                           placeholder="Enter Email *"
                           class="form-control"
-                          name="email"
                           type="email"
                         />
                       </div>
@@ -816,6 +782,47 @@ const wishListStore = useWishlistStore();
 const product = ref(null);
 const loading = ref(true);
 
+const reviewForm = ref({
+  rating: 0,
+  comment: "",
+  name: "",
+  email: "",
+});
+
+const submitReview = async () => {
+  if (!reviewForm.value.rating) {
+    toast.error("Please select a rating");
+    return;
+  }
+
+  try {
+    await apiClient.post(
+      `/products/${product.value.id}/reviews`,
+      reviewForm.value,
+    );
+
+    toast.success("Review submitted");
+
+    await loadProduct();
+    reviewForm.value = {
+      rating: 0,
+      comment: "",
+      name: "",
+      email: "",
+    };
+  } catch (e) {
+    toast.error("Failed to submit review");
+  }
+};
+
+const formatDate = (date) => {
+  return new Date(date).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+};
+
 const loadProduct = async () => {
   try {
     const res = await apiClient.get(`/product/${route.params.slug}`);
@@ -893,7 +900,7 @@ const selectedVariation = computed(() => {
 
   return (
     product.value.variations?.find(
-      (v) => v.size === selectedSize.value && v.color === selectedColor.value
+      (v) => v.size === selectedSize.value && v.color === selectedColor.value,
     ) || null
   );
 });
@@ -913,7 +920,7 @@ const isOutOfStock = computed(() => {
 const hasStockForSize = (size) => {
   if (product.value.variations?.length > 0) {
     return product.value.variations?.some(
-      (v) => v.size === size && v.stock > 0
+      (v) => v.size === size && v.stock > 0,
     );
   }
 

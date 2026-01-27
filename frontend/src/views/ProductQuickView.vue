@@ -75,9 +75,10 @@
                   ></div>
                 </div>
                 <span class="rating_num"
-                  >({{
-                    product.star ? (product.star * 20).toFixed(0) + "%" : "N/A"
-                  }})</span
+                  >{{ product.star ? product.star.toFixed(1) : "N/A" }}
+                  <small
+                    >({{ product.review_count ?? 0 }} reviews)</small
+                  ></span
                 >
               </div>
               <div class="pr_desc">
@@ -320,7 +321,7 @@ watch(
       mainImage.value = allUniqueImages.value[0];
     }
   },
-  { immediate: true }
+  { immediate: true },
 );
 
 const isOutOfStock = computed(() => {
@@ -338,7 +339,7 @@ const isOutOfStock = computed(() => {
 const hasStockForSize = (size) => {
   if (props.product.variations?.length > 0) {
     return props.product.variations?.some(
-      (v) => v.size === size && v.stock > 0
+      (v) => v.size === size && v.stock > 0,
     );
   }
 
@@ -354,7 +355,7 @@ const selectedVariation = computed(() => {
 
   return (
     props.product.variations?.find(
-      (v) => v.size === selectedSize.value && v.color === selectedColor.value
+      (v) => v.size === selectedSize.value && v.color === selectedColor.value,
     ) || null
   );
 });
