@@ -15,7 +15,7 @@ class ProductController extends Controller
 {
     public function index(Request $request): JsonResponse
     {
-        $products = Product::with('brand', 'category', 'sliders', 'details', 'variations')->productFilter($request)->paginate(20);
+        $products = Product::with('brand', 'category', 'sliders', 'details', 'variations', 'reviews')->productFilter($request)->paginate(20);
 
         $products->getCollection()->transform(function ($product) {
             return ProductHelper::format($product);
@@ -27,7 +27,7 @@ class ProductController extends Controller
     public function featuredProducts(): JsonResponse
     {
         try {
-            $products = Product::with('brand', 'category', 'sliders', 'details')
+            $products = Product::with('brand', 'category', 'sliders', 'details', 'variations', 'reviews')
             ->where('remarks', 'featured')
             ->get();
 
@@ -38,6 +38,29 @@ class ProductController extends Controller
             Log::error('Error fetching featured products: ' . $e->getMessage());
             return $this->error('Failed to retrieve featured products.', 500);
         }
+    }
+
+    public function relatedProducts($id)
+    {
+        $product = Product::findOrFail($id);
+
+        $products = Product::where('category_id', $product->category_id)
+            ->where('id', '!=', $product->id)
+            ->select('id', 'title', 'slug', 'price', 'image', 'star')
+            ->get()
+            ->map(function ($p) {
+                return [
+                    'id' => $p->id,
+                    'title' => $p->title,
+                    'slug' => $p->slug,
+                    'price' => $p->price,
+                    'image' => $p->image,
+                    'star' => (float) ($p->star ?? 0),
+                    'review_count' => $p->reviews->count(),
+                ];
+            });
+
+        return $this->success($products, 'Related products');
     }
 
     public function show(string $slug): JsonResponse

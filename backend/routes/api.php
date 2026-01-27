@@ -27,6 +27,7 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('products', [ProductController::class, 'index']);
     Route::get('/product/{slug}', [ProductController::class, 'show']);
     Route::get('products/featured', [ProductController::class, 'featuredProducts']);
+    Route::get('/products/{id}/related', [ProductController::class, 'relatedProducts']);
     Route::get('products/sliders', [ProductController::class, 'productSliders']);
     Route::get('/products/search', [ProductController::class, 'search']);
     Route::get('/products/search-paginate', [ProductController::class, 'searchPaginate']);

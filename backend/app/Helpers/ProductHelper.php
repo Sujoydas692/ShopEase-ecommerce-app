@@ -4,7 +4,7 @@ namespace App\Helpers;
 
 class ProductHelper
 {
-    public static function format($product)
+    public static function format($product, $relatedProducts = null)
     {
         $details = $product->details instanceof \Illuminate\Support\Collection
             ? $product->details->first()
@@ -85,6 +85,22 @@ class ProductHelper
             })->values()
             : [];
 
+            $related = [];
+
+            if ($relatedProducts && $relatedProducts->isNotEmpty()) {
+                $related = $relatedProducts->map(function ($p) {
+                    return [
+                        'id' => $p->id,
+                        'title' => $p->title,
+                        'slug' => $p->slug,
+                        'price' => $p->price,
+                        'image' => $p->image,
+                        'star' => round($p->reviews->avg('rating') ?? 0, 1),
+                        'review_count' => $p->reviews->count(),
+                    ];
+                })->values();
+            }
+
         return [
             'id'            => $product->id,
             'title'         => $product->title,
@@ -97,6 +113,8 @@ class ProductHelper
             'short_desc'    => $product->short_desc,
             'star'          => $product->star,
             'remarks'          => $product->remarks,
+
+            'related_products' => $related,
 
             'reviews'       => $reviews,
             'review_count' => count($reviews),
