@@ -284,18 +284,6 @@
                 <li class="nav-item">
                   <a
                     class="nav-link"
-                    id="Additional-info-tab"
-                    data-bs-toggle="tab"
-                    href="#Additional-info"
-                    role="tab"
-                    aria-controls="Additional-info"
-                    aria-selected="false"
-                    >Additional info</a
-                  >
-                </li>
-                <li class="nav-item">
-                  <a
-                    class="nav-link"
                     id="Reviews-tab"
                     data-bs-toggle="tab"
                     href="#Reviews"
@@ -316,31 +304,6 @@
                   <p>
                     {{ product?.details?.description }}
                   </p>
-                </div>
-                <div
-                  class="tab-pane fade"
-                  id="Additional-info"
-                  role="tabpanel"
-                  aria-labelledby="Additional-info-tab"
-                >
-                  <table class="table table-bordered">
-                    <tr>
-                      <td>Capacity</td>
-                      <td>5 Kg</td>
-                    </tr>
-                    <tr>
-                      <td>Color</td>
-                      <td>Black, Brown, Red,</td>
-                    </tr>
-                    <tr>
-                      <td>Water Resistant</td>
-                      <td>Yes</td>
-                    </tr>
-                    <tr>
-                      <td>Material</td>
-                      <td>Artificial Leather</td>
-                    </tr>
-                  </table>
                 </div>
                 <div
                   class="tab-pane fade"
@@ -836,40 +799,6 @@
       </div>
     </div>
     <!-- END SECTION SHOP -->
-
-    <!-- START SECTION SUBSCRIBE NEWSLETTER -->
-    <div class="section bg_default small_pt small_pb">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-md-6">
-            <div class="heading_s1 mb-md-0 heading_light">
-              <h3>Subscribe Our Newsletter</h3>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="newsletter_form">
-              <form>
-                <input
-                  type="text"
-                  required=""
-                  class="form-control rounded-0"
-                  placeholder="Enter Email Address"
-                />
-                <button
-                  type="submit"
-                  class="btn btn-dark rounded-0"
-                  name="submit"
-                  value="Submit"
-                >
-                  Subscribe
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- START SECTION SUBSCRIBE NEWSLETTER -->
   </div>
   <!-- END MAIN CONTENT -->
 </template>

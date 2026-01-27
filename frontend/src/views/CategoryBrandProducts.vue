@@ -17,12 +17,28 @@
             <li class="breadcrumb-item">
               <router-link to="/">Home</router-link>
             </li>
-            <li v-if="routeName === 'category.products'" class="breadcrumb-item active">Category</li>
-            <li v-if="routeName === 'brand.products'" class="breadcrumb-item active">Brand</li>
-            <li v-if="routeName === 'category.products'" class="breadcrumb-item active">
+            <li
+              v-if="routeName === 'category.products'"
+              class="breadcrumb-item active"
+            >
+              Category
+            </li>
+            <li
+              v-if="routeName === 'brand.products'"
+              class="breadcrumb-item active"
+            >
+              Brand
+            </li>
+            <li
+              v-if="routeName === 'category.products'"
+              class="breadcrumb-item active"
+            >
               {{ category?.name }}
             </li>
-            <li v-if="routeName === 'brand.products'" class="breadcrumb-item active">
+            <li
+              v-if="routeName === 'brand.products'"
+              class="breadcrumb-item active"
+            >
               {{ brand?.name }}
             </li>
           </ol>
@@ -306,65 +322,12 @@
                   </li>
                 </ul>
               </div>
-              <div class="widget">
-                <div class="shop_banner">
-                  <div class="banner_img overlay_bg_20">
-                    <img
-                      src="/assets/images/sidebar_banner_img.jpg"
-                      alt="sidebar_banner_img"
-                    />
-                  </div>
-                  <div class="shop_bn_content2 text_white">
-                    <h5 class="text-uppercase shop_subtitle">New Collection</h5>
-                    <h3 class="text-uppercase shop_title">Sale 30% Off</h3>
-                    <a
-                      href="#"
-                      class="btn btn-white rounded-0 btn-sm text-uppercase"
-                      >Shop Now</a
-                    >
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
     <!-- END SECTION SHOP -->
-
-    <!-- START SECTION SUBSCRIBE NEWSLETTER -->
-    <div class="section bg_default small_pt small_pb">
-      <div class="container">
-        <div class="row align-items-center">
-          <div class="col-md-6">
-            <div class="heading_s1 mb-md-0 heading_light">
-              <h3>Subscribe Our Newsletter</h3>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="newsletter_form">
-              <form>
-                <input
-                  type="text"
-                  required=""
-                  class="form-control rounded-0"
-                  placeholder="Enter Email Address"
-                />
-                <button
-                  type="submit"
-                  class="btn btn-dark rounded-0"
-                  name="submit"
-                  value="Submit"
-                >
-                  Subscribe
-                </button>
-              </form>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <!-- START SECTION SUBSCRIBE NEWSLETTER -->
   </div>
   <Teleport to="#quickview-container">
     <ProductQuickView
@@ -446,7 +409,7 @@ const loadCategoryProducts = async (page = 1) => {
   loading.value = true;
   try {
     const res = await apiClient.get(
-      `/products/category/${route.params.slug}?page=${page}`
+      `/products/category/${route.params.slug}?page=${page}`,
     );
 
     const paginated = res.data.data;
@@ -477,7 +440,7 @@ const loadBrandProducts = async (page = 1) => {
   loading.value = true;
   try {
     const res = await apiClient.get(
-      `/products/brand/${route.params.slug}?page=${page}`
+      `/products/brand/${route.params.slug}?page=${page}`,
     );
 
     const paginated = res.data.data;
@@ -572,7 +535,7 @@ watch(
       loadBrand();
       sections.category.products = [];
     }
-  }
+  },
 );
 </script>
 <style scoped>
