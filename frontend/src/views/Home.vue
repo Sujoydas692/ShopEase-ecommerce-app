@@ -216,12 +216,9 @@
                               }"
                             ></div>
                           </div>
-                          <span class="rating_num"
-                            >{{
-                              product.star ? product.star.toFixed(1) : "N/A"
-                            }}
+                          <span class="rating_num">
                             <small
-                              >({{ product.review_count ?? 0 }} reviews)</small
+                              >({{ product.review_count ?? 0 }})</small
                             ></span
                           >
                         </div>
@@ -332,12 +329,9 @@
                               }"
                             ></div>
                           </div>
-                          <span class="rating_num"
-                            >{{
-                              product.star ? product.star.toFixed(1) : "N/A"
-                            }}
+                          <span class="rating_num">
                             <small
-                              >({{ product.review_count ?? 0 }} reviews)</small
+                              >({{ product.review_count ?? 0 }})</small
                             ></span
                           >
                         </div>
@@ -448,12 +442,9 @@
                               }"
                             ></div>
                           </div>
-                          <span class="rating_num"
-                            >{{
-                              product.star ? product.star.toFixed(1) : "N/A"
-                            }}
+                          <span class="rating_num">
                             <small
-                              >({{ product.review_count ?? 0 }} reviews)</small
+                              >({{ product.review_count ?? 0 }})</small
                             ></span
                           >
                         </div>
@@ -564,12 +555,9 @@
                               }"
                             ></div>
                           </div>
-                          <span class="rating_num"
-                            >{{
-                              product.star ? product.star.toFixed(1) : "N/A"
-                            }}
+                          <span class="rating_num">
                             <small
-                              >({{ product.review_count ?? 0 }} reviews)</small
+                              >({{ product.review_count ?? 0 }})</small
                             ></span
                           >
                         </div>
@@ -680,12 +668,9 @@
                               }"
                             ></div>
                           </div>
-                          <span class="rating_num"
-                            >{{
-                              product.star ? product.star.toFixed(1) : "N/A"
-                            }}
+                          <span class="rating_num">
                             <small
-                              >({{ product.review_count ?? 0 }} reviews)</small
+                              >({{ product.review_count ?? 0 }})</small
                             ></span
                           >
                         </div>
@@ -807,11 +792,8 @@
                           }"
                         ></div>
                       </div>
-                      <span class="rating_num"
-                        >{{ product.star ? product.star.toFixed(1) : "N/A" }}
-                        <small
-                          >({{ product.review_count ?? 0 }} reviews)</small
-                        ></span
+                      <span class="rating_num">
+                        <small>({{ product.review_count ?? 0 }})</small></span
                       >
                     </div>
                     <div class="pr_desc">

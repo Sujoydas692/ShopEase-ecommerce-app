@@ -62,15 +62,39 @@
           <div class="col-lg-6 col-md-6">
             <div class="pr_detail">
               <div class="product_description">
-                <h4 class="product_title">
-                  <router-link
-                    :to="{
-                      name: 'productdetail',
-                      params: { slug: product?.slug },
-                    }"
-                    >{{ product?.title }}</router-link
-                  >
-                </h4>
+                <div class="title-rating-row">
+                  <h4 class="product_title">
+                    <router-link
+                      :to="{
+                        name: 'productdetail',
+                        params: { slug: product?.slug },
+                      }"
+                      >{{ product?.title }}</router-link
+                    >
+                  </h4>
+                  <div class="rating-wrap1">
+                    <div class="rating_wrap">
+                      <div class="rating">
+                        <div
+                          class="product_rate"
+                          :style="{
+                            width: ((product?.star ?? 0) / 5) * 100 + '%',
+                          }"
+                        ></div>
+                      </div>
+                      <span class="rating_num"
+                        ><span class="rating_value">
+                          {{
+                            product?.star ? product.star.toFixed(1) : "N/A"
+                          }} </span
+                        >/5
+                        <small
+                          >({{ product?.review_count ?? 0 }} reviews)</small
+                        ></span
+                      >
+                    </div>
+                  </div>
+                </div>
                 <div class="product_price">
                   <span class="price">৳{{ product?.price }}</span>
                   <del>৳55.25</del>
@@ -85,22 +109,6 @@
                       </template>
                     </span>
                   </div>
-                </div>
-                <div class="rating_wrap">
-                  <div class="rating">
-                    <div
-                      class="product_rate"
-                      :style="{
-                        width: ((product?.star ?? 0) / 5) * 100 + '%',
-                      }"
-                    ></div>
-                  </div>
-                  <span class="rating_num"
-                    >{{ product?.star ? product.star.toFixed(1) : "N/A" }}
-                    <small
-                      >({{ product?.review_count ?? 0 }} reviews)</small
-                    ></span
-                  >
                 </div>
                 <div class="pr_desc">
                   <p>
@@ -331,9 +339,9 @@
                           </div>
                           <p class="customer_meta">
                             <span class="review_author">{{ review.name }}</span>
-                            <span class="comment-date">{{
-                              formatDate(review.created_at)
-                            }}</span>
+                            <span class="comment-date">
+                              {{ formatDate(review.created_at) }}
+                            </span>
                           </p>
                           <div class="description">
                             <p>
@@ -343,7 +351,7 @@
                         </div>
                       </li>
                       <li v-if="!product?.reviews?.length">
-                        <p>No reviews yet.</p>
+                        <p>This product has no review.</p>
                       </li>
                     </ul>
                   </div>
@@ -500,11 +508,8 @@
                           }"
                         ></div>
                       </div>
-                      <span class="rating_num"
-                        >{{ rp?.star ? rp?.star.toFixed(1) : "N/A" }}
-                        <small
-                          >({{ rp?.review_count ?? 0 }} reviews)</small
-                        ></span
+                      <span class="rating_num">
+                        <small>({{ rp?.review_count ?? 0 }})</small></span
                       >
                     </div>
                     <div class="pr_desc">
@@ -610,6 +615,13 @@ const openQuickView = async (product) => {
     closeQuickView();
     await new Promise((resolve) => setTimeout(resolve, 100));
   }
+
+  watch(
+    () => route.fullPath,
+    () => {
+      closeQuickView();
+    },
+  );
 
   try {
     const res = await apiClient.get(`/product/${product.slug}`);
@@ -1008,6 +1020,35 @@ watch(
 .brand-link {
   color: #ff324d;
   text-decoration: none;
+}
+.comment-date {
+  font-size: 12px;
+  color: #707070;
+}
+
+.rating_value {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+}
+
+.title-rating-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.rating-wrap1 .rating_wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.rating-wrap1 .rating {
+  transform: scale(1.3);
+  transform-origin: right center;
 }
 
 @media (max-width: 768px) {

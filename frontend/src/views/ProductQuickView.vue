@@ -75,9 +75,9 @@
                   ></div>
                 </div>
                 <span class="rating_num"
-                  >{{ product.star ? product.star.toFixed(1) : "N/A" }}
+                  >
                   <small
-                    >({{ product.review_count ?? 0 }} reviews)</small
+                    >({{ product.review_count ?? 0 }})</small
                   ></span
                 >
               </div>
