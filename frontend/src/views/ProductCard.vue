@@ -197,4 +197,11 @@ onMounted(() => {
   height: 36px;
   overflow: hidden;
 }
+.list_none li a {
+  color: #292b2c !important;
+}
+
+.list_none li a:hover {
+  color: #fff !important;
+}
 </style>

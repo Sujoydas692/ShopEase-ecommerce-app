@@ -54,271 +54,311 @@
     <!-- START SECTION SHOP -->
     <div class="section">
       <div class="container">
-        <div class="row">
-          <div class="col-lg-9">
-            <template v-if="routeName === 'category.products'">
-              <div class="row shop_container">
-                <div
-                  v-for="product in sections.category.products"
-                  :key="product?.id"
-                  class="col-md-4 col-6"
-                >
-                  <div class="product">
-                    <div class="product_img">
-                      <router-link
-                        :to="{
-                          name: 'productdetail',
-                          params: { slug: product?.slug },
-                        }"
-                      >
-                        <img :src="product?.image" :alt="product?.title" />
-                      </router-link>
-                      <div class="product_action_box">
-                        <ul class="list_none pr_action_btn">
-                          <li class="add-to-cart">
-                            <a
-                              href="javascript:void(0)"
-                              @click.prevent="addToCartItem(product.id)"
-                              ><i class="icon-basket-loaded"></i> Add To Cart</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              href="javascript:void(0)"
-                              @click.prevent="openQuickView(product)"
-                              ><i class="icon-magnifier-add"></i
-                            ></a>
-                          </li>
-                          <li
-                            :class="{
-                              'active-wish': wishListStore.has(product.id),
-                            }"
-                          >
-                            <a
-                              href="javascript:void(0)"
-                              @click.prevent="wishListStore.toggle(product.id)"
-                              ><i class="icon-heart"></i
-                            ></a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div class="product_info">
-                      <h6 class="product_title">
-                        <router-link
-                          :to="{
-                            name: 'productdetail',
-                            params: { slug: product?.slug },
-                          }"
-                        >
-                          {{ product?.title }}
-                        </router-link>
-                      </h6>
-                      <div class="product_price">
-                        <span class="price">৳ {{ product?.price }}</span>
-                        <del>৳55.25</del>
-                        <div class="on_sale">
-                          <span v-if="product.discount">
-                            <template
-                              v-if="product.discount_type === 'percentage'"
-                            >
-                              {{ product.discount }}% Off
-                            </template>
-
-                            <template
-                              v-else-if="product.discount_type === 'fixed'"
-                            >
-                              ৳ {{ product.discount }} Off
-                            </template>
-                          </span>
-                        </div>
-                      </div>
-                      <div class="rating_wrap">
-                        <div class="rating">
-                          <div
-                            class="product_rate"
-                            :style="{
-                              width: ((product.star ?? 0) / 5) * 100 + '%',
-                            }"
-                          ></div>
-                        </div>
-                        <span class="rating_num"
-                          >{{ product.star ? product.star.toFixed(1) : "N/A" }}
-                          <small
-                            >({{ product.review_count ?? 0 }} reviews)</small
-                          ></span
-                        >
-                      </div>
-                      <div class="pr_desc">
-                        <p>
-                          {{ product.short_desc }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <Pagination
-                v-if="sections.category.meta.last_page > 1"
-                :meta="sections.category.meta"
-                @page-changed="loadCategoryProducts"
-              />
-            </template>
-            <template v-if="routeName === 'brand.products'">
-              <div class="row shop_container">
-                <div
-                  v-for="product in sections.brand.products"
-                  :key="product?.id"
-                  class="col-md-4 col-6"
-                >
-                  <div class="product">
-                    <div class="product_img">
-                      <router-link
-                        :to="{
-                          name: 'productdetail',
-                          params: { slug: product?.slug },
-                        }"
-                      >
-                        <img :src="product?.image" :alt="product?.title" />
-                      </router-link>
-                      <div class="product_action_box">
-                        <ul class="list_none pr_action_btn">
-                          <li class="add-to-cart">
-                            <a
-                              href="javascript:void(0)"
-                              @click.prevent="addToCartItem(product.id)"
-                              ><i class="icon-basket-loaded"></i> Add To Cart</a
-                            >
-                          </li>
-                          <li>
-                            <a
-                              href="javascript:void(0)"
-                              @click.prevent="openQuickView(product)"
-                              ><i class="icon-magnifier-add"></i
-                            ></a>
-                          </li>
-                          <li
-                            :class="{
-                              'active-wish': wishListStore.has(product.id),
-                            }"
-                          >
-                            <a
-                              href="javascript:void(0)"
-                              @click.prevent="wishListStore.toggle(product.id)"
-                              ><i class="icon-heart"></i
-                            ></a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                    <div class="product_info">
-                      <h6 class="product_title">
-                        <router-link
-                          :to="{
-                            name: 'productdetail',
-                            params: { slug: product?.slug },
-                          }"
-                        >
-                          {{ product?.title }}
-                        </router-link>
-                      </h6>
-                      <div class="product_price">
-                        <span class="price">৳ {{ product?.price }}</span>
-                        <del>৳55.25</del>
-                        <div class="on_sale">
-                          <span v-if="product.discount">
-                            <template
-                              v-if="product.discount_type === 'percentage'"
-                            >
-                              {{ product.discount }}% Off
-                            </template>
-
-                            <template
-                              v-else-if="product.discount_type === 'fixed'"
-                            >
-                              ৳ {{ product.discount }} Off
-                            </template>
-                          </span>
-                        </div>
-                      </div>
-                      <div class="rating_wrap">
-                        <div class="rating">
-                          <div
-                            class="product_rate"
-                            :style="{
-                              width: ((product.star ?? 0) / 5) * 100 + '%',
-                            }"
-                          ></div>
-                        </div>
-                        <span class="rating_num"
-                          >{{ product.star ? product.star.toFixed(1) : "N/A" }}
-                          <small
-                            >({{ product.review_count ?? 0 }} reviews)</small
-                          ></span
-                        >
-                      </div>
-                      <div class="pr_desc">
-                        <p>
-                          {{ product.short_desc }}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <Pagination
-                v-if="sections.brand.meta.last_page > 1"
-                :meta="sections.brand.meta"
-                @page-changed="loadBrandProducts"
-              />
-            </template>
+        <div v-if="pageLoading" class="text-center py-5">
+          <div class="lds-ellipsis">
+            <span></span>
+            <span></span>
+            <span></span>
           </div>
-
-          <div class="col-lg-3 order-lg-first mt-4 pt-2 mt-lg-0 pt-lg-0">
-            <div class="sidebar">
-              <div class="widget">
-                <h5 class="widget_title">Categories</h5>
-                <ul class="widget_categories">
-                  <li
-                    v-for="category in categories"
-                    :key="category.id"
-                    :class="{
-                      active:
-                        routeName === 'category.products' &&
-                        category.slug === currentSlug,
-                    }"
-                  >
-                    <router-link
-                      :to="{
-                        name: 'category.products',
-                        params: { slug: category.slug },
-                      }"
-                      >{{ category.name }}</router-link
-                    >
-                  </li>
-                </ul>
+        </div>
+        <div v-else>
+          <div class="row">
+            <div class="col-lg-9">
+              <div v-if="productsLoading" class="row shop_container">
+                <div class="col-md-4 col-6" v-for="i in 9" :key="i">
+                  <div class="product skeleton-card">
+                    <div class="product_img skeleton-img"></div>
+                    <div class="product_info">
+                      <div class="skeleton-line w-80 mb-2"></div>
+                      <div class="skeleton-line w-60 mb-2"></div>
+                      <div class="skeleton-line w-40 mb-2"></div>
+                      <div class="skeleton-stars"></div>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <div class="widget">
-                <h5 class="widget_title">Brands</h5>
-                <ul class="widget_categories">
-                  <li
-                    v-for="brand in brands"
-                    :key="brand.id"
-                    :class="{
-                      active:
-                        routeName === 'brand.products' &&
-                        brand.slug === currentSlug,
-                    }"
-                  >
-                    <router-link
-                      :to="{
-                        name: 'brand.products',
-                        params: { slug: brand.slug },
-                      }"
-                      >{{ brand.name }}</router-link
+              <template v-else>
+                <template v-if="routeName === 'category.products'">
+                  <div class="row shop_container">
+                    <div
+                      v-for="product in sections.category.products"
+                      :key="product?.id"
+                      class="col-md-4 col-6"
                     >
-                  </li>
-                </ul>
+                      <div class="product">
+                        <div class="product_img">
+                          <router-link
+                            :to="{
+                              name: 'productdetail',
+                              params: { slug: product?.slug },
+                            }"
+                          >
+                            <img :src="product?.image" :alt="product?.title" />
+                          </router-link>
+                          <div class="product_action_box">
+                            <ul class="list_none pr_action_btn">
+                              <li class="add-to-cart">
+                                <a
+                                  href="javascript:void(0)"
+                                  @click.prevent="addToCartItem(product.id)"
+                                  ><i class="icon-basket-loaded"></i> Add To
+                                  Cart</a
+                                >
+                              </li>
+                              <li>
+                                <a
+                                  href="javascript:void(0)"
+                                  @click.prevent="openQuickView(product)"
+                                  ><i class="icon-magnifier-add"></i
+                                ></a>
+                              </li>
+                              <li
+                                :class="{
+                                  'active-wish': wishListStore.has(product.id),
+                                }"
+                              >
+                                <a
+                                  href="javascript:void(0)"
+                                  @click.prevent="
+                                    wishListStore.toggle(product.id)
+                                  "
+                                  ><i class="icon-heart"></i
+                                ></a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="product_info">
+                          <h6 class="product_title">
+                            <router-link
+                              :to="{
+                                name: 'productdetail',
+                                params: { slug: product?.slug },
+                              }"
+                            >
+                              {{ product?.title }}
+                            </router-link>
+                          </h6>
+                          <div class="product_price">
+                            <span class="price">৳ {{ product?.price }}</span>
+                            <del>৳55.25</del>
+                            <div class="on_sale">
+                              <span v-if="product.discount">
+                                <template
+                                  v-if="product.discount_type === 'percentage'"
+                                >
+                                  {{ product.discount }}% Off
+                                </template>
+
+                                <template
+                                  v-else-if="product.discount_type === 'fixed'"
+                                >
+                                  ৳ {{ product.discount }} Off
+                                </template>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="rating_wrap">
+                            <div class="rating">
+                              <div
+                                class="product_rate"
+                                :style="{
+                                  width: ((product.star ?? 0) / 5) * 100 + '%',
+                                }"
+                              ></div>
+                            </div>
+                            <span class="rating_num"
+                              >{{
+                                product.star ? product.star.toFixed(1) : "N/A"
+                              }}
+                              <small
+                                >({{
+                                  product.review_count ?? 0
+                                }}
+                                reviews)</small
+                              ></span
+                            >
+                          </div>
+                          <div class="pr_desc">
+                            <p>
+                              {{ product.short_desc }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <Pagination
+                    v-if="sections.category.meta.last_page > 1"
+                    :meta="sections.category.meta"
+                    @page-changed="loadCategoryProducts"
+                  />
+                </template>
+                <template v-if="routeName === 'brand.products'">
+                  <div class="row shop_container">
+                    <div
+                      v-for="product in sections.brand.products"
+                      :key="product?.id"
+                      class="col-md-4 col-6"
+                    >
+                      <div class="product">
+                        <div class="product_img">
+                          <router-link
+                            :to="{
+                              name: 'productdetail',
+                              params: { slug: product?.slug },
+                            }"
+                          >
+                            <img :src="product?.image" :alt="product?.title" />
+                          </router-link>
+                          <div class="product_action_box">
+                            <ul class="list_none pr_action_btn">
+                              <li class="add-to-cart">
+                                <a
+                                  href="javascript:void(0)"
+                                  @click.prevent="addToCartItem(product.id)"
+                                  ><i class="icon-basket-loaded"></i> Add To
+                                  Cart</a
+                                >
+                              </li>
+                              <li>
+                                <a
+                                  href="javascript:void(0)"
+                                  @click.prevent="openQuickView(product)"
+                                  ><i class="icon-magnifier-add"></i
+                                ></a>
+                              </li>
+                              <li
+                                :class="{
+                                  'active-wish': wishListStore.has(product.id),
+                                }"
+                              >
+                                <a
+                                  href="javascript:void(0)"
+                                  @click.prevent="
+                                    wishListStore.toggle(product.id)
+                                  "
+                                  ><i class="icon-heart"></i
+                                ></a>
+                              </li>
+                            </ul>
+                          </div>
+                        </div>
+                        <div class="product_info">
+                          <h6 class="product_title">
+                            <router-link
+                              :to="{
+                                name: 'productdetail',
+                                params: { slug: product?.slug },
+                              }"
+                            >
+                              {{ product?.title }}
+                            </router-link>
+                          </h6>
+                          <div class="product_price">
+                            <span class="price">৳ {{ product?.price }}</span>
+                            <del>৳55.25</del>
+                            <div class="on_sale">
+                              <span v-if="product.discount">
+                                <template
+                                  v-if="product.discount_type === 'percentage'"
+                                >
+                                  {{ product.discount }}% Off
+                                </template>
+
+                                <template
+                                  v-else-if="product.discount_type === 'fixed'"
+                                >
+                                  ৳ {{ product.discount }} Off
+                                </template>
+                              </span>
+                            </div>
+                          </div>
+                          <div class="rating_wrap">
+                            <div class="rating">
+                              <div
+                                class="product_rate"
+                                :style="{
+                                  width: ((product.star ?? 0) / 5) * 100 + '%',
+                                }"
+                              ></div>
+                            </div>
+                            <span class="rating_num"
+                              >{{
+                                product.star ? product.star.toFixed(1) : "N/A"
+                              }}
+                              <small
+                                >({{
+                                  product.review_count ?? 0
+                                }}
+                                reviews)</small
+                              ></span
+                            >
+                          </div>
+                          <div class="pr_desc">
+                            <p>
+                              {{ product.short_desc }}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <Pagination
+                    v-if="sections.brand.meta.last_page > 1"
+                    :meta="sections.brand.meta"
+                    @page-changed="loadBrandProducts"
+                  />
+                </template>
+              </template>
+            </div>
+
+            <div class="col-lg-3 order-lg-first mt-4 pt-2 mt-lg-0 pt-lg-0">
+              <div class="sidebar">
+                <div class="widget">
+                  <h5 class="widget_title">Categories</h5>
+                  <ul class="widget_categories">
+                    <li
+                      v-for="category in categories"
+                      :key="category.id"
+                      :class="{
+                        active:
+                          routeName === 'category.products' &&
+                          category.slug === currentSlug,
+                      }"
+                    >
+                      <router-link
+                        :to="{
+                          name: 'category.products',
+                          params: { slug: category.slug },
+                        }"
+                        >{{ category.name }}</router-link
+                      >
+                    </li>
+                  </ul>
+                </div>
+                <div class="widget">
+                  <h5 class="widget_title">Brands</h5>
+                  <ul class="widget_categories">
+                    <li
+                      v-for="brand in brands"
+                      :key="brand.id"
+                      :class="{
+                        active:
+                          routeName === 'brand.products' &&
+                          brand.slug === currentSlug,
+                      }"
+                    >
+                      <router-link
+                        :to="{
+                          name: 'brand.products',
+                          params: { slug: brand.slug },
+                        }"
+                        >{{ brand.name }}</router-link
+                      >
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -361,7 +401,8 @@ const categories = ref([]);
 const brand = ref(null);
 const brands = ref([]);
 
-const loading = ref(true);
+const pageLoading = ref(true);
+const productsLoading = ref(false);
 
 const quickViewProduct = ref(null);
 const quickViewVisible = ref(false);
@@ -404,7 +445,7 @@ const sections = reactive({
 });
 
 const loadCategoryProducts = async (page = 1) => {
-  loading.value = true;
+  productsLoading.value = true;
   try {
     const res = await apiClient.get(
       `/products/category/${route.params.slug}?page=${page}`,
@@ -430,12 +471,13 @@ const loadCategoryProducts = async (page = 1) => {
   } catch (error) {
     console.error(error);
   } finally {
-    loading.value = false;
+    productsLoading.value = false;
+    pageLoading.value = false;
   }
 };
 
 const loadBrandProducts = async (page = 1) => {
-  loading.value = true;
+  productsLoading.value = true;
   try {
     const res = await apiClient.get(
       `/products/brand/${route.params.slug}?page=${page}`,
@@ -461,7 +503,8 @@ const loadBrandProducts = async (page = 1) => {
   } catch (error) {
     console.error(error);
   } finally {
-    loading.value = false;
+    productsLoading.value = false;
+    pageLoading.value = false;
   }
 };
 
@@ -550,5 +593,63 @@ watch(
 .widget_categories li.active > a {
   color: #ff324d;
   font-weight: 600;
+}
+.list_none li a {
+  color: #292b2c !important;
+}
+
+.list_none li a:hover {
+  color: #fff !important;
+}
+/* ===== Skeleton Base ===== */
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 220px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.skeleton-stars {
+  width: 80px;
+  height: 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.w-80 {
+  width: 80%;
+}
+.w-60 {
+  width: 60%;
+}
+.w-40 {
+  width: 40%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
 }
 </style>

@@ -21,7 +21,19 @@
   <!-- END SECTION BREADCRUMB -->
   <section class="container py-4">
     <!-- Loading -->
-    <div v-if="loading" class="text-center py-5">Loading...</div>
+    <div v-if="loading" class="row">
+      <div class="col-lg-3 col-md-4 col-6 mb-4" v-for="i in 9" :key="i">
+        <div class="product skeleton-card">
+          <div class="product_img skeleton-img"></div>
+          <div class="product_info">
+            <div class="skeleton-line w-80 mb-2"></div>
+            <div class="skeleton-line w-60 mb-2"></div>
+            <div class="skeleton-line w-40 mb-2"></div>
+            <div class="skeleton-stars"></div>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Products -->
     <div v-else>
@@ -106,5 +118,56 @@ watch(
 <style scoped>
 .search-text {
   text-transform: none !important;
+}
+/* ===== Skeleton Base ===== */
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 220px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.skeleton-stars {
+  width: 80px;
+  height: 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.w-80 {
+  width: 80%;
+}
+.w-60 {
+  width: 60%;
+}
+.w-40 {
+  width: 40%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
 }
 </style>

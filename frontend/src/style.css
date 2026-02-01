@@ -19,7 +19,7 @@ a {
   text-decoration: inherit;
 }
 a:hover {
-  color: #FF324D;
+  color: #FF324D !important;
 }
 
 body {

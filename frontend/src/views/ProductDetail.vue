@@ -28,494 +28,546 @@
     <!-- START SECTION SHOP -->
     <div class="section">
       <div class="container">
-        <div class="row">
+        <div v-if="loading" class="row">
+          <!-- LEFT IMAGE -->
           <div class="col-lg-6 col-md-6 mb-4 mb-md-0">
-            <div class="product-image">
-              <div
-                class="product_img_box zoom-container"
-                @mousemove="handleZoom"
-                @mouseleave="resetZoom"
-              >
-                <img
-                  ref="zoomImg"
-                  :key="mainImage"
-                  :src="mainImage"
-                  :alt="product?.title"
-                  class="zoom-image"
-                />
-              </div>
-              <div class="thumbnail-gallery">
-                <div class="thumbnail-container">
-                  <div
-                    v-for="img in uniqueThumbnails"
-                    :key="img"
-                    class="thumbnail-item"
-                    @click="mainImage = img"
-                    :class="{ active: mainImage === img }"
-                  >
-                    <img :src="img" />
-                  </div>
-                </div>
+            <div class="product skeleton-card">
+              <div class="skeleton-img" style="height: 350px"></div>
+
+              <div class="thumbnail-container mt-3">
+                <div
+                  v-for="i in 4"
+                  :key="i"
+                  class="skeleton-line"
+                  style="width: 70px; height: 70px; border-radius: 8px"
+                ></div>
               </div>
             </div>
           </div>
+
+          <!-- RIGHT INFO -->
           <div class="col-lg-6 col-md-6">
-            <div class="pr_detail">
-              <div class="product_description">
-                <div class="title-rating-row">
-                  <h4 class="product_title">
-                    <router-link
-                      :to="{
-                        name: 'productdetail',
-                        params: { slug: product?.slug },
-                      }"
-                      >{{ product?.title }}</router-link
+            <div class="skeleton-card">
+              <div class="skeleton-line w-80"></div>
+              <div class="skeleton-stars"></div>
+
+              <div class="skeleton-line w-40" style="height: 18px"></div>
+
+              <div class="skeleton-line w-100"></div>
+              <div class="skeleton-line w-90"></div>
+
+              <div class="skeleton-line w-60"></div>
+
+              <div class="skeleton-line w-80" style="height: 40px"></div>
+            </div>
+          </div>
+        </div>
+
+        <div v-else>
+          <div class="row">
+            <div class="col-lg-6 col-md-6 mb-4 mb-md-0">
+              <div class="product-image">
+                <div
+                  class="product_img_box zoom-container"
+                  @mousemove="handleZoom"
+                  @mouseleave="resetZoom"
+                >
+                  <img
+                    ref="zoomImg"
+                    :key="mainImage"
+                    :src="mainImage"
+                    :alt="product?.title"
+                    class="zoom-image"
+                  />
+                </div>
+                <div class="thumbnail-gallery">
+                  <div class="thumbnail-container">
+                    <div
+                      v-for="img in uniqueThumbnails"
+                      :key="img"
+                      class="thumbnail-item"
+                      @click="mainImage = img"
+                      :class="{ active: mainImage === img }"
                     >
-                  </h4>
-                  <div class="rating-wrap1">
-                    <div class="rating_wrap">
-                      <div class="rating">
-                        <div
-                          class="product_rate"
-                          :style="{
-                            width: ((product?.star ?? 0) / 5) * 100 + '%',
-                          }"
-                        ></div>
-                      </div>
-                      <span class="rating_num"
-                        ><span class="rating_value">
-                          {{
-                            product?.star ? product.star.toFixed(1) : "N/A"
-                          }} </span
-                        >/5
-                        <small
-                          >({{ product?.review_count ?? 0 }} reviews)</small
-                        ></span
-                      >
+                      <img :src="img" />
                     </div>
                   </div>
                 </div>
-                <div class="product_price">
-                  <span class="price">৳{{ product?.price }}</span>
-                  <del>৳55.25</del>
-                  <div class="on_sale">
-                    <span v-if="product?.discount">
-                      <template v-if="product.discount_type === 'percentage'">
-                        {{ product?.discount }}% Off
-                      </template>
-
-                      <template v-else-if="product.discount_type === 'fixed'">
-                        ৳ {{ product?.discount }} Off
-                      </template>
-                    </span>
-                  </div>
-                </div>
-                <div class="pr_desc">
-                  <p>
-                    {{ product?.short_desc }}
-                  </p>
-                </div>
-                <div class="product_sort_info">
-                  <ul>
-                    <li>
-                      <i class="linearicons-shield-check"></i> 1 Year
-                      <router-link
-                        :to="{
-                          name: 'brand.products',
-                          params: { slug: product?.brand?.slug },
-                        }"
-                        class="brand-link"
-                      >
-                        {{ product?.brand?.name }}
-                      </router-link>
-                      Brand Warranty
-                    </li>
-                    <li>
-                      <i class="linearicons-sync"></i> 30 Day Return Policy
-                    </li>
-                    <li>
-                      <i class="linearicons-bag-dollar"></i> Cash on Delivery
-                      available
-                    </li>
-                  </ul>
-                </div>
-                <div class="pr_switch_wrap" v-if="filteredColors.length">
-                  <span class="switch_lable">Color</span>
-                  <div class="product_color_switch">
-                    <span
-                      v-for="(c, idx) in filteredColors"
-                      :key="idx"
-                      :data-color="c"
-                      :style="{ backgroundColor: c }"
-                      @click="selectedColor = c"
-                      :class="{ active: selectedColor === c }"
-                    ></span>
-                  </div>
-                </div>
-                <div class="pr_switch_wrap" v-if="sizes.length">
-                  <span class="switch_lable">Size</span>
-                  <div class="product_size_switch">
-                    <span
-                      v-for="(s, idx) in sizes"
-                      :key="idx"
-                      @click="hasStockForSize(s) && (selectedSize = s)"
-                      :class="{
-                        active: selectedSize === s,
-                        disabled: !hasStockForSize(s),
-                      }"
-                    >
-                      {{ s }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              <hr />
-              <div class="cart_extra">
-                <div class="cart-product-quantity">
-                  <div class="quantity">
-                    <input
-                      type="button"
-                      value="-"
-                      class="minus"
-                      @click="decreaseQuantity"
-                    />
-                    <input
-                      type="number"
-                      v-model.number="qty"
-                      min="1"
-                      class="qty"
-                      size="4"
-                      @change="validateQuantity"
-                    />
-                    <input
-                      type="button"
-                      value="+"
-                      class="plus"
-                      @click="increaseQuantity"
-                    />
-                  </div>
-                </div>
-                <div class="cart_btn">
-                  <button
-                    class="btn btn-fill-out btn-addtocart"
-                    type="button"
-                    @click.prevent="addToCartItem(product.id)"
-                    :disabled="addingToCart || isOutOfStock"
-                  >
-                    <i
-                      :class="isOutOfStock ? 'icon-ban' : 'icon-basket-loaded'"
-                    ></i>
-                    <span v-if="isOutOfStock">Out of Stock</span>
-                    <span v-else>
-                      {{ addingToCart ? "Adding..." : "Add to cart" }}
-                    </span>
-                  </button>
-                  <a class="add_compare" href="#"
-                    ><i class="icon-shuffle"></i
-                  ></a>
-                  <a
-                    class="add_wishlist"
-                    :class="{
-                      'active-wish': wishListStore?.has(product?.id),
-                    }"
-                    href="javascript:void(0)"
-                    @click.prevent="wishListStore.toggle(product.id)"
-                    ><i class="icon-heart"></i
-                  ></a>
-                </div>
-              </div>
-              <hr />
-              <ul class="product-meta">
-                <li>
-                  SKU: <a href="javascript:void(0)">{{ displaySku }}</a>
-                </li>
-                <li>
-                  Category:
-                  <router-link
-                    :to="{
-                      name: 'category.products',
-                      params: { slug: product?.category?.slug },
-                    }"
-                    >{{ product?.category?.name }}</router-link
-                  >
-                </li>
-                <li v-if="product?.tags">
-                  Tags:
-                  <span v-for="t in product?.tags" :key="t"> {{ t }} </span>
-                </li>
-              </ul>
-
-              <div class="product_share">
-                <span>Share:</span>
-                <ul class="social_icons">
-                  <li>
-                    <a href="#"><i class="ion-social-facebook"></i></a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="ion-social-twitter"></i></a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="ion-social-googleplus"></i></a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="ion-social-youtube-outline"></i></a>
-                  </li>
-                  <li>
-                    <a href="#"><i class="ion-social-instagram-outline"></i></a>
-                  </li>
-                </ul>
               </div>
             </div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <div class="large_divider clearfix"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <div class="tab-style3">
-              <ul class="nav nav-tabs" role="tablist">
-                <li class="nav-item">
-                  <a
-                    class="nav-link active"
-                    id="Description-tab"
-                    data-bs-toggle="tab"
-                    href="#Description"
-                    role="tab"
-                    aria-controls="Description"
-                    aria-selected="true"
-                    >Description</a
-                  >
-                </li>
-                <li class="nav-item">
-                  <a
-                    class="nav-link"
-                    id="Reviews-tab"
-                    data-bs-toggle="tab"
-                    href="#Reviews"
-                    role="tab"
-                    aria-controls="Reviews"
-                    aria-selected="false"
-                    >Reviews ({{ product?.review_count }})</a
-                  >
-                </li>
-              </ul>
-              <div class="tab-content shop_info_tab">
-                <div
-                  class="tab-pane fade show active"
-                  id="Description"
-                  role="tabpanel"
-                  aria-labelledby="Description-tab"
-                >
-                  <p>
-                    {{ product?.details?.description }}
-                  </p>
-                </div>
-                <div
-                  class="tab-pane fade"
-                  id="Reviews"
-                  role="tabpanel"
-                  aria-labelledby="Reviews-tab"
-                >
-                  <div class="comments">
-                    <h5 class="product_tab_title">
-                      ({{ product?.review_count }}) Review'(s) For
-                      <span>{{ product?.title }}</span>
-                    </h5>
-                    <ul class="list_none comment_list mt-4">
-                      <li v-for="review in product?.reviews" :key="review.id">
-                        <div class="comment_block">
-                          <div class="rating_wrap">
-                            <div class="rating">
-                              <div
-                                class="product_rate"
-                                :style="{
-                                  width: (review.rating / 5) * 100 + '%',
-                                }"
-                              ></div>
-                            </div>
-                          </div>
-                          <p class="customer_meta">
-                            <span class="review_author">{{ review.name }}</span>
-                            <span class="comment-date">
-                              {{ formatDate(review.created_at) }}
-                            </span>
-                          </p>
-                          <div class="description">
-                            <p>
-                              {{ review.comment }}
-                            </p>
-                          </div>
+            <div class="col-lg-6 col-md-6">
+              <div class="pr_detail">
+                <div class="product_description">
+                  <div class="title-rating-row">
+                    <h4 class="product_title">
+                      {{ product?.title }}
+                    </h4>
+                    <div class="rating-wrap1">
+                      <div class="rating_wrap">
+                        <div class="rating">
+                          <div
+                            class="product_rate"
+                            :style="{
+                              width: ((product?.star ?? 0) / 5) * 100 + '%',
+                            }"
+                          ></div>
                         </div>
+                        <span class="rating_num"
+                          ><span class="rating_value">
+                            {{
+                              product?.star ? product.star.toFixed(1) : "N/A"
+                            }} </span
+                          >/5
+                          <small
+                            >({{ product?.review_count ?? 0 }} reviews)</small
+                          ></span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                  <div class="product_price">
+                    <span class="price">৳{{ product?.price }}</span>
+                    <del>৳55.25</del>
+                    <div class="on_sale">
+                      <span v-if="product?.discount">
+                        <template v-if="product.discount_type === 'percentage'">
+                          {{ product?.discount }}% Off
+                        </template>
+
+                        <template v-else-if="product.discount_type === 'fixed'">
+                          ৳ {{ product?.discount }} Off
+                        </template>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="pr_desc">
+                    <p>
+                      {{ product?.short_desc }}
+                    </p>
+                  </div>
+                  <div class="product_sort_info">
+                    <ul>
+                      <li>
+                        <i class="linearicons-shield-check"></i> 1 Year
+                        <router-link
+                          :to="{
+                            name: 'brand.products',
+                            params: { slug: product?.brand?.slug },
+                          }"
+                          class="brand-link"
+                        >
+                          {{ product?.brand?.name }}
+                        </router-link>
+                        Brand Warranty
                       </li>
-                      <li v-if="!product?.reviews?.length">
-                        <p>This product has no review.</p>
+                      <li>
+                        <i class="linearicons-sync"></i> 30 Day Return Policy
+                      </li>
+                      <li>
+                        <i class="linearicons-bag-dollar"></i> Cash on Delivery
+                        available
                       </li>
                     </ul>
                   </div>
-                  <div class="review_form field_form">
-                    <h5>Add a review</h5>
-                    <form class="row mt-3" @submit.prevent="submitReview">
-                      <div class="form-group col-12 mb-3">
-                        <div class="star_rating">
-                          <span
-                            v-for="i in 5"
-                            :key="i"
-                            @click="reviewForm.rating = i"
-                          >
-                            <i
-                              :class="[
-                                i <= reviewForm.rating
-                                  ? 'fas fa-star'
-                                  : 'far fa-star',
-                              ]"
-                            ></i>
-                          </span>
-                        </div>
-                      </div>
-                      <div class="form-group col-12 mb-3">
-                        <textarea
-                          v-model="reviewForm.comment"
-                          placeholder="Your review *"
-                          class="form-control"
-                          rows="4"
-                        ></textarea>
-                      </div>
-                      <div class="form-group col-md-6 mb-3">
-                        <input
-                          v-model="reviewForm.name"
-                          placeholder="Enter Name *"
-                          class="form-control"
-                        />
-                      </div>
-                      <div class="form-group col-md-6 mb-3">
-                        <input
-                          v-model="reviewForm.email"
-                          placeholder="Enter Email *"
-                          class="form-control"
-                          type="email"
-                        />
-                      </div>
+                  <div class="pr_switch_wrap" v-if="filteredColors.length">
+                    <span class="switch_lable">Color</span>
+                    <div class="product_color_switch">
+                      <span
+                        v-for="(c, idx) in filteredColors"
+                        :key="idx"
+                        :data-color="c"
+                        :style="{ backgroundColor: c }"
+                        @click="selectedColor = c"
+                        :class="{ active: selectedColor === c }"
+                      ></span>
+                    </div>
+                  </div>
+                  <div class="pr_switch_wrap" v-if="sizes.length">
+                    <span class="switch_lable">Size</span>
+                    <div class="product_size_switch">
+                      <span
+                        v-for="(s, idx) in sizes"
+                        :key="idx"
+                        @click="hasStockForSize(s) && (selectedSize = s)"
+                        :class="{
+                          active: selectedSize === s,
+                          disabled: !hasStockForSize(s),
+                        }"
+                      >
+                        {{ s }}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <hr />
+                <div class="cart_extra">
+                  <div class="cart-product-quantity">
+                    <div class="quantity">
+                      <input
+                        type="button"
+                        value="-"
+                        class="minus"
+                        @click="decreaseQuantity"
+                      />
+                      <input
+                        type="number"
+                        v-model.number="qty"
+                        min="1"
+                        class="qty"
+                        size="4"
+                        @change="validateQuantity"
+                      />
+                      <input
+                        type="button"
+                        value="+"
+                        class="plus"
+                        @click="increaseQuantity"
+                      />
+                    </div>
+                  </div>
+                  <div class="cart_btn">
+                    <button
+                      class="btn btn-fill-out btn-addtocart"
+                      type="button"
+                      @click.prevent="addToCartItem(product.id)"
+                      :disabled="addingToCart || isOutOfStock"
+                    >
+                      <i
+                        :class="
+                          isOutOfStock ? 'icon-ban' : 'icon-basket-loaded'
+                        "
+                      ></i>
+                      <span v-if="isOutOfStock">Out of Stock</span>
+                      <span v-else>
+                        {{ addingToCart ? "Adding..." : "Add to cart" }}
+                      </span>
+                    </button>
+                    <a class="add_compare" href="#"
+                      ><i class="icon-shuffle"></i
+                    ></a>
+                    <a
+                      class="add_wishlist"
+                      :class="{
+                        'active-wish': wishListStore?.has(product?.id),
+                      }"
+                      href="javascript:void(0)"
+                      @click.prevent="wishListStore.toggle(product.id)"
+                      ><i class="icon-heart"></i
+                    ></a>
+                  </div>
+                </div>
+                <hr />
+                <ul class="product-meta">
+                  <li>
+                    SKU: <a href="javascript:void(0)">{{ displaySku }}</a>
+                  </li>
+                  <li>
+                    Category:
+                    <router-link
+                      :to="{
+                        name: 'category.products',
+                        params: { slug: product?.category?.slug },
+                      }"
+                      >{{ product?.category?.name }}</router-link
+                    >
+                  </li>
+                  <li v-if="product?.tags">
+                    Tags:
+                    <span v-for="t in product?.tags" :key="t"> {{ t }} </span>
+                  </li>
+                </ul>
 
-                      <div class="form-group col-12 mb-3">
-                        <button
-                          type="submit"
-                          class="btn btn-fill-out"
-                          name="submit"
-                          value="Submit"
-                        >
-                          Submit Review
-                        </button>
-                      </div>
-                    </form>
+                <div class="product_share">
+                  <span>Share:</span>
+                  <ul class="social_icons">
+                    <li>
+                      <a href="#"><i class="ion-social-facebook"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="ion-social-twitter"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="ion-social-googleplus"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"><i class="ion-social-youtube-outline"></i></a>
+                    </li>
+                    <li>
+                      <a href="#"
+                        ><i class="ion-social-instagram-outline"></i
+                      ></a>
+                    </li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="large_divider clearfix"></div>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="tab-style3">
+                <ul class="nav nav-tabs" role="tablist">
+                  <li class="nav-item">
+                    <a
+                      class="nav-link active"
+                      id="Description-tab"
+                      data-bs-toggle="tab"
+                      href="#Description"
+                      role="tab"
+                      aria-controls="Description"
+                      aria-selected="true"
+                      >Description</a
+                    >
+                  </li>
+                  <li class="nav-item">
+                    <a
+                      class="nav-link"
+                      id="Reviews-tab"
+                      data-bs-toggle="tab"
+                      href="#Reviews"
+                      role="tab"
+                      aria-controls="Reviews"
+                      aria-selected="false"
+                      >Reviews ({{ product?.review_count }})</a
+                    >
+                  </li>
+                </ul>
+                <div class="tab-content shop_info_tab">
+                  <div
+                    class="tab-pane fade show active"
+                    id="Description"
+                    role="tabpanel"
+                    aria-labelledby="Description-tab"
+                  >
+                    <p>
+                      {{ product?.details?.description }}
+                    </p>
+                  </div>
+                  <div
+                    class="tab-pane fade"
+                    id="Reviews"
+                    role="tabpanel"
+                    aria-labelledby="Reviews-tab"
+                  >
+                    <div class="comments">
+                      <h5 class="product_tab_title">
+                        ({{ product?.review_count }}) Review'(s) For
+                        <span>{{ product?.title }}</span>
+                      </h5>
+                      <ul class="list_none comment_list mt-4">
+                        <li v-for="review in product?.reviews" :key="review.id">
+                          <div class="comment_block">
+                            <div class="rating_wrap">
+                              <div class="rating">
+                                <div
+                                  class="product_rate"
+                                  :style="{
+                                    width: (review.rating / 5) * 100 + '%',
+                                  }"
+                                ></div>
+                              </div>
+                            </div>
+                            <p class="customer_meta">
+                              <span class="review_author">{{
+                                review.name
+                              }}</span>
+                              <span class="comment-date">
+                                {{ formatDate(review.created_at) }}
+                              </span>
+                            </p>
+                            <div class="description">
+                              <p>
+                                {{ review.comment }}
+                              </p>
+                            </div>
+                          </div>
+                        </li>
+                        <li v-if="!product?.reviews?.length">
+                          <p>This product has no review.</p>
+                        </li>
+                      </ul>
+                    </div>
+                    <div class="review_form field_form">
+                      <h5>Add a review</h5>
+                      <form class="row mt-3" @submit.prevent="submitReview">
+                        <div class="form-group col-12 mb-3">
+                          <div class="star_rating">
+                            <span
+                              v-for="i in 5"
+                              :key="i"
+                              @click="reviewForm.rating = i"
+                            >
+                              <i
+                                :class="[
+                                  i <= reviewForm.rating
+                                    ? 'fas fa-star'
+                                    : 'far fa-star',
+                                ]"
+                              ></i>
+                            </span>
+                          </div>
+                        </div>
+                        <div class="form-group col-12 mb-3">
+                          <textarea
+                            v-model="reviewForm.comment"
+                            placeholder="Your review *"
+                            class="form-control"
+                            rows="4"
+                          ></textarea>
+                        </div>
+                        <div class="form-group col-md-6 mb-3">
+                          <input
+                            v-model="reviewForm.name"
+                            placeholder="Enter Name *"
+                            class="form-control"
+                          />
+                        </div>
+                        <div class="form-group col-md-6 mb-3">
+                          <input
+                            v-model="reviewForm.email"
+                            placeholder="Enter Email *"
+                            class="form-control"
+                            type="email"
+                          />
+                        </div>
+
+                        <div class="form-group col-12 mb-3">
+                          <button
+                            type="submit"
+                            class="btn btn-fill-out"
+                            name="submit"
+                            value="Submit"
+                          >
+                            Submit Review
+                          </button>
+                        </div>
+                      </form>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <div class="small_divider"></div>
-            <div class="divider"></div>
-            <div class="medium_divider"></div>
-          </div>
-        </div>
-        <div class="row">
-          <div class="col-12">
-            <div class="heading_s1">
-              <h3>Related Products</h3>
+          <div class="row">
+            <div class="col-12">
+              <div class="small_divider"></div>
+              <div class="divider"></div>
+              <div class="medium_divider"></div>
             </div>
-            <div
-              v-if="related_products?.length"
-              class="releted_product_slider carousel_slider owl-carousel owl-theme"
-            >
-              <div class="item" v-for="rp in related_products" :key="rp.id">
-                <div class="product">
-                  <div class="product_img">
-                    <router-link
-                      :to="{
-                        name: 'productdetail',
-                        params: { slug: rp?.slug },
-                      }"
-                    >
-                      <img :src="rp?.image" :alt="rp?.title" />
-                    </router-link>
-                    <div class="product_action_box">
-                      <ul class="list_none pr_action_btn">
-                        <li class="add-to-cart">
-                          <a
-                            href="javascript:void(0)"
-                            @click.prevent="addToCartItemOne(rp.id)"
-                            ><i class="icon-basket-loaded"></i> Add To Cart</a
-                          >
-                        </li>
-                        <li>
-                          <a
-                            href="javascript:void(0)"
-                            @click.prevent="openQuickView(rp)"
-                            ><i class="icon-magnifier-add"></i
-                          ></a>
-                        </li>
-                        <li
-                          :class="{
-                            'active-wish': wishListStore.has(rp.id),
-                          }"
-                        >
-                          <a
-                            href="javascript:void(0)"
-                            @click.prevent="wishListStore.toggle(rp.id)"
-                            ><i class="icon-heart"></i
-                          ></a>
-                        </li>
-                      </ul>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="heading_s1">
+                <h3>Related Products</h3>
+              </div>
+              <div
+                v-if="relatedLoading"
+                class="releted_product_slider owl-carousel owl-theme"
+              >
+                <div class="item" v-for="i in 6" :key="i">
+                  <div class="product skeleton-card">
+                    <div class="skeleton-img"></div>
+                    <div class="product_info">
+                      <div class="skeleton-line w-80"></div>
+                      <div class="skeleton-line w-60"></div>
+                      <div class="skeleton-line w-40"></div>
                     </div>
                   </div>
-                  <div class="product_info">
-                    <h6 class="product_title">
+                </div>
+              </div>
+              <div
+                v-else-if="related_products?.length"
+                class="releted_product_slider carousel_slider owl-carousel owl-theme"
+              >
+                <div class="item" v-for="rp in related_products" :key="rp.id">
+                  <div class="product">
+                    <div class="product_img">
                       <router-link
                         :to="{
                           name: 'productdetail',
                           params: { slug: rp?.slug },
                         }"
                       >
-                        {{ rp?.title }}
+                        <img :src="rp?.image" :alt="rp?.title" />
                       </router-link>
-                    </h6>
-                    <div class="product_price">
-                      <span class="price">৳ {{ rp?.price }}</span>
-                      <del>৳55.25</del>
-                      <div class="on_sale">
-                        <span v-if="rp?.discount">
-                          <template v-if="rp?.discount_type === 'percentage'">
-                            {{ rp?.discount }}% Off
-                          </template>
-
-                          <template v-else-if="rp?.discount_type === 'fixed'">
-                            ৳ {{ rp?.discount }} Off
-                          </template>
-                        </span>
+                      <div class="product_action_box">
+                        <ul class="list_none pr_action_btn">
+                          <li class="add-to-cart">
+                            <a
+                              href="javascript:void(0)"
+                              @click.prevent="addToCartItemOne(rp.id)"
+                              ><i class="icon-basket-loaded"></i> Add To Cart</a
+                            >
+                          </li>
+                          <li>
+                            <a
+                              href="javascript:void(0)"
+                              @click.prevent="openQuickView(rp)"
+                              ><i class="icon-magnifier-add"></i
+                            ></a>
+                          </li>
+                          <li
+                            :class="{
+                              'active-wish': wishListStore.has(rp.id),
+                            }"
+                          >
+                            <a
+                              href="javascript:void(0)"
+                              @click.prevent="wishListStore.toggle(rp.id)"
+                              ><i class="icon-heart"></i
+                            ></a>
+                          </li>
+                        </ul>
                       </div>
                     </div>
-                    <div class="rating_wrap">
-                      <div class="rating">
-                        <div
-                          class="product_rate"
-                          :style="{
-                            width: ((rp?.star ?? 0) / 5) * 100 + '%',
+                    <div class="product_info">
+                      <h6 class="product_title">
+                        <router-link
+                          :to="{
+                            name: 'productdetail',
+                            params: { slug: rp?.slug },
                           }"
-                        ></div>
+                        >
+                          {{ rp?.title }}
+                        </router-link>
+                      </h6>
+                      <div class="product_price">
+                        <span class="price">৳ {{ rp?.price }}</span>
+                        <del>৳55.25</del>
+                        <div class="on_sale">
+                          <span v-if="rp?.discount">
+                            <template v-if="rp?.discount_type === 'percentage'">
+                              {{ rp?.discount }}% Off
+                            </template>
+
+                            <template v-else-if="rp?.discount_type === 'fixed'">
+                              ৳ {{ rp?.discount }} Off
+                            </template>
+                          </span>
+                        </div>
                       </div>
-                      <span class="rating_num">
-                        <small>({{ rp?.review_count ?? 0 }})</small></span
-                      >
-                    </div>
-                    <div class="pr_desc">
-                      <p>
-                        {{ rp?.short_desc }}
-                      </p>
+                      <div class="rating_wrap">
+                        <div class="rating">
+                          <div
+                            class="product_rate"
+                            :style="{
+                              width: ((rp?.star ?? 0) / 5) * 100 + '%',
+                            }"
+                          ></div>
+                        </div>
+                        <span class="rating_num">
+                          <small>({{ rp?.review_count ?? 0 }})</small></span
+                        >
+                      </div>
+                      <div class="pr_desc">
+                        <p>
+                          {{ rp?.short_desc }}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -550,6 +602,8 @@ const route = useRoute();
 const wishListStore = useWishlistStore();
 const product = ref(null);
 const loading = ref(true);
+
+const relatedLoading = ref(true);
 
 const related_products = ref([]);
 
@@ -595,11 +649,18 @@ const formatDate = (date) => {
 };
 
 const loadRelatedProducts = async () => {
+  relatedLoading.value = true;
   if (!product.value?.id) return;
 
-  const res = await apiClient.get(`/products/${product.value.id}/related`);
+  try {
+    const res = await apiClient.get(`/products/${product.value.id}/related`);
 
-  related_products.value = res.data.data;
+    related_products.value = res.data.data;
+  } catch (e) {
+    console.error("Failed to load related products", e);
+  } finally {
+    relatedLoading.value = false;
+  }
 };
 
 const quickViewProduct = ref(null);
@@ -886,6 +947,7 @@ watch(
   async (newSlug, oldSlug) => {
     if (newSlug !== oldSlug) {
       loading.value = true;
+      relatedLoading.value = true;
       product.value = null;
       mainImage.value = null;
       related_products.value = [];
@@ -1049,6 +1111,66 @@ watch(
 .rating-wrap1 .rating {
   transform: scale(1.3);
   transform-origin: right center;
+}
+
+.list_none li a {
+  color: #292b2c !important;
+}
+
+.list_none li a:hover {
+  color: #fff !important;
+}
+
+/* ===== Skeleton Base ===== */
+.skeleton-card {
+  pointer-events: none;
+}
+
+.skeleton-img {
+  width: 100%;
+  height: 220px;
+  border-radius: 6px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.skeleton-line {
+  height: 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.skeleton-stars {
+  width: 80px;
+  height: 12px;
+  margin-top: 10px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.w-80 {
+  width: 80%;
+}
+.w-60 {
+  width: 60%;
+}
+.w-40 {
+  width: 40%;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
 }
 
 @media (max-width: 768px) {

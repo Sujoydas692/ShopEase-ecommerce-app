@@ -144,7 +144,7 @@
                               {{
                                 order.products?.reduce(
                                   (total, p) => total + p.quantity,
-                                  0
+                                  0,
                                 )
                               }}
                               items
@@ -228,7 +228,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import apiClient from "../../lib/axiosClient";
-import router from "../../router";
 import { useAuth } from "../../store/auth";
 
 const auth = useAuth();
@@ -283,3 +282,16 @@ const switchTab = (tabId) => {
   }
 };
 </script>
+<style scoped>
+.nav li a {
+  color: #2b2f4c !important;
+}
+
+.nav li a:hover {
+  color: #2b2f4c !important;
+}
+
+.nav li a.active {
+  color: #fff !important;
+}
+</style>
