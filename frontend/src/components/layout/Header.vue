@@ -308,12 +308,14 @@ import { ref, onMounted, onBeforeUnmount, watch } from "vue";
 import { useAuth } from "../../store/auth";
 import { useCartStore } from "../../store/cart";
 import { toast } from "vue3-toastify";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import apiClient from "../../lib/axiosClient";
 import { useWishlistStore } from "../../store/wishList";
 
 const auth = useAuth();
 const cart = useCartStore();
+
+const route = useRoute();
 const router = useRouter();
 const wishlistStore = useWishlistStore();
 
@@ -331,14 +333,20 @@ const totalResults = ref(0);
 const goToSearchPage = () => {
   if (!searchQuery.value.trim()) return;
 
+  const keyword = searchQuery.value;
+
   showResults.value = false;
 
   router.push({
     name: "search",
     query: {
-      q: searchQuery.value,
+      q: keyword,
     },
   });
+
+  searchQuery.value = "";
+  searchResults.value = [];
+  totalResults.value = 0;
 };
 
 const searchProducts = () => {
@@ -455,6 +463,14 @@ onMounted(() => {
     cart.loadCart();
   }
 });
+watch(
+  () => route.name,
+  (name) => {
+    if (name !== "search") {
+      searchQuery.value = "";
+    }
+  },
+);
 
 watch(
   () => auth.isAuthenticated,
@@ -463,7 +479,7 @@ watch(
       await wishlistStore.loadWishlist();
       await cart.loadCart();
     } else {
-      wishlistStore.clearWishlist();
+      wishlistStore.clear();
       cart.clearCart();
     }
   },
