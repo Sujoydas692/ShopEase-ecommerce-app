@@ -6,6 +6,7 @@ import router from "@/router";
 export const useCheckoutStore = defineStore("checkout", {
   state: () => ({
     loading: false,
+    pageLoading: true,
 
     formData: {
       first_name: "",
@@ -22,6 +23,7 @@ export const useCheckoutStore = defineStore("checkout", {
 
   actions: {
     async loadCustomerProfile() {
+      this.pageLoading = true;
       try {
         const { useCartStore } = await import("./cart");
         const cartStore = useCartStore();
@@ -50,6 +52,8 @@ export const useCheckoutStore = defineStore("checkout", {
         }
       } catch (error) {
         console.log("No customer profile found.");
+      } finally {
+        this.pageLoading = false;
       }
     },
 

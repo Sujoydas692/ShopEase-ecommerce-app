@@ -71,7 +71,26 @@
             <div class="medium_divider"></div>
           </div>
         </div>
-        <div class="row">
+        <div class="row" v-if="checkout.pageLoading">
+          <!-- Billing Skeleton -->
+          <div class="col-md-6">
+            <div class="heading_s1">
+              <h4>Billing Details</h4>
+            </div>
+            <div class="skeleton-box mb-3" v-for="i in 7" :key="'b' + i"></div>
+          </div>
+
+          <!-- Order Skeleton -->
+          <div class="col-md-6">
+            <div class="heading_s1">
+              <h4>Your Orders</h4>
+            </div>
+            <div class="skeleton-line mb-3"></div>
+            <div class="skeleton-line mb-2" v-for="i in 4" :key="'o' + i"></div>
+            <div class="skeleton-total"></div>
+          </div>
+        </div>
+        <div class="row" v-else>
           <div class="col-md-6">
             <div class="heading_s1">
               <h4>Billing Details</h4>
@@ -307,6 +326,7 @@ const auth = useAuth();
 const formData = checkout.formData;
 
 onMounted(async () => {
+  checkout.pageLoading = true;
   await cartStore.loadDistricts();
   cartStore.loadLocationFromLocal();
   await checkout.loadCustomerProfile();
@@ -321,6 +341,7 @@ onMounted(async () => {
   if (auth.user?.email) {
     formData.email = auth.user.email;
   }
+  checkout.pageLoading = false;
 });
 
 watch(
@@ -330,7 +351,7 @@ watch(
       cartStore.loadUpazila(newVal);
       formData.upazila_id = "";
     }
-  }
+  },
 );
 
 const updateDistrict = () => {
@@ -377,4 +398,39 @@ const placeOrder = async () => {
   checkout.processCheckout(payload);
 };
 </script>
-<style scoped></style>
+<style scoped>
+.skeleton-box {
+  height: 42px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeleton-line {
+  height: 16px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+.skeleton-total {
+  height: 24px;
+  width: 60%;
+  margin-top: 10px;
+  border-radius: 4px;
+  background: linear-gradient(90deg, #eee 25%, #f5f5f5 37%, #eee 63%);
+  background-size: 400% 100%;
+  animation: shimmer 1.4s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -100% 0;
+  }
+}
+</style>
