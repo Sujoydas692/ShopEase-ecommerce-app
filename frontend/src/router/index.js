@@ -11,6 +11,7 @@ import OrderComplete from "../views/Dashboard/OrderComplete.vue";
 import ProductDetail from "../views/ProductDetail.vue";
 import CategoryBrandProducts from "../views/CategoryBrandProducts.vue";
 import Search from "../views/Search.vue";
+import Compare from "../views/Compare.vue";
 
 const routes = [
   {
@@ -27,6 +28,11 @@ const routes = [
     path: "/search",
     name: "search",
     component: Search,
+  },
+  {
+    path: "/compare",
+    name: "compare",
+    component: Compare,
   },
   {
     path: "/products/category/:slug",

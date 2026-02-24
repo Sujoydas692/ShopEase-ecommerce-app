@@ -34,6 +34,8 @@ Route::group(['prefix' => 'v1'], function () {
     Route::get('/products/category/{slug}', [ProductController::class, 'productsByCategory']);
     Route::get('/products/brand/{slug}', [ProductController::class, 'productsByBrand']);
 
+    Route::post('/products/batch', [ProductController::class, 'getBatch']);
+
     Route::get('/products/{id}/reviews', [ReviewController::class, 'index']);
     Route::post('/products/{id}/reviews', [ReviewController::class, 'store']);
 

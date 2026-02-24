@@ -28,8 +28,8 @@
             <div class="text-center text-md-end">
               <ul class="header_list">
                 <li>
-                  <a href="compare.html"
-                    ><i class="ti-control-shuffle"></i><span>Compare</span></a
+                  <router-link to="/compare"
+                    ><i class="ti-control-shuffle"></i><span>Compare</span></router-link
                   >
                 </li>
                 <li v-if="auth.isAuthenticated">

@@ -145,29 +145,38 @@
                       {{ product?.short_desc }}
                     </p>
                   </div>
-                  <div class="product_sort_info">
-                    <ul>
-                      <li>
-                        <i class="linearicons-shield-check"></i> 1 Year
-                        <router-link
-                          :to="{
-                            name: 'brand.products',
-                            params: { slug: product?.brand?.slug },
-                          }"
-                          class="brand-link"
-                        >
-                          {{ product?.brand?.name }}
-                        </router-link>
-                        Brand Warranty
-                      </li>
-                      <li>
-                        <i class="linearicons-sync"></i> 30 Day Return Policy
-                      </li>
-                      <li>
-                        <i class="linearicons-bag-dollar"></i> Cash on Delivery
-                        available
-                      </li>
-                    </ul>
+                  <div class="product_sort_wrap">
+                    <div class="product_sort_info">
+                      <ul>
+                        <li>
+                          <i class="linearicons-shield-check"></i> 1 Year
+                          <router-link
+                            :to="{
+                              name: 'brand.products',
+                              params: { slug: product?.brand?.slug },
+                            }"
+                            class="brand-link"
+                          >
+                            {{ product?.brand?.name }}
+                          </router-link>
+                          Brand Warranty
+                        </li>
+                        <li>
+                          <i class="linearicons-sync"></i> 30 Day Return Policy
+                        </li>
+                        <li>
+                          <i class="linearicons-bag-dollar"></i> Cash on
+                          Delivery available
+                        </li>
+                      </ul>
+                    </div>
+                    <button
+                      class="btn btn-outline-secondary btn-compare-sm"
+                      @click.prevent="addToCompare(product)"
+                    >
+                      <i class="icon-shuffle"></i>
+                      Add To Compare
+                    </button>
                   </div>
                   <div class="pr_switch_wrap" v-if="filteredColors.length">
                     <span class="switch_lable">Color</span>
@@ -242,9 +251,6 @@
                         {{ addingToCart ? "Adding..." : "Add to cart" }}
                       </span>
                     </button>
-                    <a class="add_compare" href="#"
-                      ><i class="icon-shuffle"></i
-                    ></a>
                     <a
                       class="add_wishlist"
                       :class="{
@@ -596,6 +602,7 @@ import { toast } from "vue3-toastify";
 import apiClient from "../lib/axiosClient";
 import { useWishlistStore } from "../store/wishList";
 import ProductQuickView from "./ProductQuickView.vue";
+import { useCompareStore } from "../store/compare";
 
 const cart = useCartStore();
 const route = useRoute();
@@ -606,6 +613,14 @@ const loading = ref(true);
 const relatedLoading = ref(true);
 
 const related_products = ref([]);
+
+const compareStore = useCompareStore();
+
+const addToCompare = (product) => {
+  if (!product) return;
+
+  compareStore.addToCompare(product);
+};
 
 const reviewForm = ref({
   rating: 0,
@@ -1154,6 +1169,25 @@ watch(
   animation: shimmer 1.4s ease infinite;
 }
 
+.product_sort_wrap {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.btn-compare-sm {
+  padding: 6px 10px;
+  font-size: 12px;
+  white-space: nowrap;
+  height: fit-content;
+}
+
+.btn-compare-sm i {
+  margin-right: 4px;
+  font-size: 12px;
+}
+
 .w-80 {
   width: 80%;
 }
@@ -1210,6 +1244,15 @@ watch(
 
   .thumbnail-container {
     justify-content: flex-start;
+  }
+
+  .product_sort_wrap {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-compare-sm {
+    margin-top: 8px;
   }
 }
 </style>

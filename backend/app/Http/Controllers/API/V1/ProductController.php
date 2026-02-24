@@ -10,6 +10,7 @@ use App\Models\ProductSlider;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class ProductController extends Controller
 {
@@ -161,5 +162,46 @@ class ProductController extends Controller
         ->paginate(9);
 
         return $this->success($products, 'Products retrieved successfully.');
+    }
+
+    public function getBatch(Request $request): JsonResponse
+    {
+        $validator = Validator::make($request->all(), [
+            'ids' => 'required|array|min:1|max:10',
+            'ids.*' => 'integer|exists:products,id'
+        ]);
+
+        if ($validator->fails()) {
+            return $this->error($validator->errors()->first(), 422);
+        }
+
+        try {
+            $ids = $request->input('ids');
+            
+            $products = Product::with([
+                    'brand', 
+                    'category', 
+                    'sliders', 
+                    'details', 
+                    'variations', 
+                    'reviews'
+                ])
+                ->whereIn('id', $ids)
+                ->get();
+            
+            $formattedProducts = $products->map(function ($product) {
+                return ProductHelper::format($product);
+            });
+            
+            $sortedProducts = collect($ids)->map(function ($id) use ($formattedProducts) {
+                return $formattedProducts->firstWhere('id', $id);
+            })->filter()->values();
+            
+            return $this->success($sortedProducts, 'Products retrieved successfully.');
+            
+        } catch (\Exception $e) {
+            Log::error('Batch product fetch error: ' . $e->getMessage());
+            return $this->error('Failed to fetch products.', 500);
+        }
     }
 }
