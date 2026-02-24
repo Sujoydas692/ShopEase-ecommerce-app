@@ -5,6 +5,7 @@ import apiClient from "../lib/axiosClient";
 export const useCompareStore = defineStore("compare", {
   state: () => ({
     items: [],
+    allProducts: [],
     cachedItems: JSON.parse(localStorage.getItem("compare_items")) || [],
     itemIds: JSON.parse(localStorage.getItem("compare_ids")) || [],
     maxItems: 4,
@@ -75,7 +76,7 @@ export const useCompareStore = defineStore("compare", {
       
       await this.loadLiveData();
       
-      toast.success("Added to compare");
+      toast.success("Product added to compare");
     },
 
     async removeFromCompare(id) {
@@ -87,7 +88,7 @@ export const useCompareStore = defineStore("compare", {
       
       await this.loadLiveData();
       
-      toast.info("Removed from compare");
+      toast.error("Product removed from compare");
     },
 
     async refreshData() {

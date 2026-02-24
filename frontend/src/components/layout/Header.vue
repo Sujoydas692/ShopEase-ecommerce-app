@@ -27,11 +27,6 @@
           <div class="col-md-6">
             <div class="text-center text-md-end">
               <ul class="header_list">
-                <li>
-                  <router-link to="/compare"
-                    ><i class="ti-control-shuffle"></i><span>Compare</span></router-link
-                  >
-                </li>
                 <li v-if="auth.isAuthenticated">
                   <router-link to="/dashboard/my-account"
                     ><i class="ti-user"></i><span>My Account</span></router-link
@@ -295,6 +290,14 @@
                 </div>
               </div>
             </li>
+            <li>
+              <router-link
+                to="/compare"
+                class="btn btn-outline-secondary compare-btn"
+                ><i class="ti-control-shuffle"></i
+                ><span>Compare</span></router-link
+              >
+            </li>
           </ul>
         </nav>
       </div>
@@ -525,6 +528,30 @@ onBeforeUnmount(() => {
   transform: translateY(10px);
   transition: all 0.2s ease;
   z-index: 999;
+}
+
+.compare-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  position: relative;
+  padding: 5px 10px;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.compare-btn:hover {
+  background-color: #6c757d;
+  color: #fff !important;
+}
+
+.compare-btn i {
+  margin-right: 4px;
+  font-size: 18px;
+}
+
+.compare-btn span {
+  font-size: 14px;
 }
 
 @media (min-width: 992px) {

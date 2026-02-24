@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API\V1;
 
 use App\Helpers\ProductHelper;
 use App\Http\Controllers\Controller;
-use App\Models\Category;
 use App\Models\Product;
 use App\Models\ProductSlider;
 use Illuminate\Http\JsonResponse;
